@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Amazon.SimpleNotificationService;
-using Amazon.SQS;
-using Amazon.SQS.Model;
+using NLog;
 
 namespace RedCarpet.SNS.Consumer
 {
@@ -51,6 +45,7 @@ namespace RedCarpet.SNS.Consumer
 		public class SQSService : ServiceBase
 		{
 
+			ILogger nLogger = LogManager.GetLogger("SQS Consumer Logger");
 
 			Thread thread;
 			SQSConsumer consumer;
@@ -63,13 +58,13 @@ namespace RedCarpet.SNS.Consumer
 				string queueUrl = appSettings["queueUrl"];
 				string serviceUrl = appSettings["serviceUrl"];
 
-				consumer = new SQSConsumer(queueUrl, serviceUrl);
+				consumer = new SQSConsumer(queueUrl, serviceUrl, nLogger);
 			}
 
 			protected override void OnStart(string[] args)
 			{
 				Console.WriteLine("Starting " + ServiceName);
-
+				nLogger.Log(LogLevel.Info, "Starting " + ServiceName);
 				thread = new Thread(this.DoWork);
 				thread.Start();
 			}
@@ -77,7 +72,7 @@ namespace RedCarpet.SNS.Consumer
 			protected override void OnStop()
 			{
 				Console.WriteLine("Stopping " + ServiceName);
-
+				nLogger.Log(LogLevel.Info, "Stopping " + ServiceName);
 				thread.Abort();
 			}
 			public void DoWork()
