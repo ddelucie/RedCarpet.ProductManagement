@@ -16,6 +16,7 @@ namespace RedCarpet.SNS.Consumer
 		ILogger nLogger;
 
 		AmazonSQSConfig sqsConfig;
+		AmazonSQSClient sqsClient;
 
 		public SQSConsumer()
 		{ Initialize(); }
@@ -23,6 +24,8 @@ namespace RedCarpet.SNS.Consumer
 		public SQSConsumer(string queueUrl, string serviceUrl, ILogger nLogger)
 		{
 			nLogger.Log(LogLevel.Info, "SQSConsumer Initializing");
+			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
+			nLogger.Log(LogLevel.Info, string.Format("queueUrl: {0}", queueUrl));
 
 			this.queueUrl = queueUrl;
 			this.serviceUrl = serviceUrl;
@@ -37,13 +40,11 @@ namespace RedCarpet.SNS.Consumer
 
 			sqsConfig.ServiceURL = serviceUrl;
 
-			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
+			sqsClient = new AmazonSQSClient(sqsConfig);
 		}
 
 		public void Process()
 		{
-
-			var sqsClient = new AmazonSQSClient(sqsConfig);
 
 			var receiveMessageRequest = new ReceiveMessageRequest();
 
