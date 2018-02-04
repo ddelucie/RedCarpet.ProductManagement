@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
@@ -49,6 +50,8 @@ namespace RedCarpet.SNS.Consumer
 
 		public class SQSService : ServiceBase
 		{
+
+
 			Thread thread;
 			SQSConsumer consumer;
 
@@ -56,7 +59,11 @@ namespace RedCarpet.SNS.Consumer
 			{
 				ServiceName = Program.ServiceName;
 
-				consumer = new SQSConsumer();
+				var appSettings = ConfigurationManager.AppSettings;
+				string queueUrl = appSettings["queueUrl"];
+				string serviceUrl = appSettings["serviceUrl"];
+
+				consumer = new SQSConsumer(queueUrl, serviceUrl);
 			}
 
 			protected override void OnStart(string[] args)

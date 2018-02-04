@@ -13,27 +13,30 @@ namespace RedCarpet.SNS.Consumer
 		string queueUrl = "https://sqs.us-west-2.amazonaws.com/324811268269/ConsoleTest";
 		string serviceUrl = "http://sqs.us-west-2.amazonaws.com";
 
+		AmazonSQSConfig sqsConfig;
+
 		public SQSConsumer()
-		{
-		}
+		{ Initialize(); }
 
 		public SQSConsumer(string queueUrl, string serviceUrl)
 		{
 			this.queueUrl = queueUrl;
 			this.serviceUrl = serviceUrl;
+			Initialize();
 		}
 
 
-		public void Process()
+		public void Initialize()
 		{
-			AmazonSQSConfig sqsConfig = new AmazonSQSConfig();
+			sqsConfig = new AmazonSQSConfig();
 
 			sqsConfig.ServiceURL = serviceUrl;
+		}
 
+		public void Process()
+		{
 
 			var sqsClient = new AmazonSQSClient(sqsConfig);
-
-			
 
 			var receiveMessageRequest = new ReceiveMessageRequest();
 
@@ -46,8 +49,8 @@ namespace RedCarpet.SNS.Consumer
 			{
 				Console.WriteLine(item.Body);
 				DeleteMessageResponse objDeleteMessageResponse = new DeleteMessageResponse();
-				objDeleteMessageResponse = sqsClient.DeleteMessage(new DeleteMessageRequest()
-				{ QueueUrl = queueUrl, ReceiptHandle = item.ReceiptHandle });
+				var deleteMessageRequest = new DeleteMessageRequest() { QueueUrl = queueUrl, ReceiptHandle = item.ReceiptHandle };
+				objDeleteMessageResponse = sqsClient.DeleteMessage(deleteMessageRequest);
 			}
 		}
 	}
