@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
@@ -11,32 +13,84 @@ namespace RedCarpet.SNS.Consumer
 {
 	class Program
 	{
+
 		static void Main(string[] args)
 		{
-			AmazonSQSConfig sqsConfig = new AmazonSQSConfig();
 
-			sqsConfig.ServiceURL = "http://sqs.us-west-2.amazonaws.com";
-
-
-			var sqsClient = new AmazonSQSClient(sqsConfig);
-
-			string queueUrl = "https://sqs.us-west-2.amazonaws.com/324811268269/ConsoleTest";
-
-			var receiveMessageRequest = new ReceiveMessageRequest();
-
-			receiveMessageRequest.QueueUrl = queueUrl;
-
-			var receiveMessageResponse = sqsClient.ReceiveMessage(receiveMessageRequest);
-
-
-			foreach (var item in receiveMessageResponse.Messages)
+			if (Environment.UserInteractive)
 			{
-				Console.WriteLine(item.Body);
-				DeleteMessageResponse objDeleteMessageResponse = new DeleteMessageResponse();
-				objDeleteMessageResponse = sqsClient.DeleteMessage(new DeleteMessageRequest()
-				{ QueueUrl = queueUrl, ReceiptHandle = item.ReceiptHandle });
+				// running as console app
+				SQSService service = new SQSService();
+				service.Start(args);
+
+
+				Console.WriteLine("Press any key to stop...");
+				Console.ReadKey(true);
+
+				service.Stop();
 			}
+			else
+			{
+				// running as service
+				using (var service = new SQSService())
+				{
+					ServiceBase.Run(service);
+				}
+			}
+
+			
 			Console.ReadKey();
 		}
+
+
+
+
+		public const string ServiceName = "SQS Consumer";
+
+		public class SQSService : ServiceBase
+		{
+			Thread thread;
+			SQSConsumer consumer;
+
+			public SQSService()
+			{
+				ServiceName = Program.ServiceName;
+
+				consumer = new SQSConsumer();
+			}
+
+			protected override void OnStart(string[] args)
+			{
+				Console.WriteLine("Starting " + ServiceName);
+
+				thread = new Thread(this.DoWork);
+				thread.Start();
+			}
+
+			protected override void OnStop()
+			{
+				Console.WriteLine("Stopping " + ServiceName);
+
+				thread.Abort();
+			}
+			public void DoWork()
+			{
+				while (true)
+				{
+					consumer.Process();
+					Thread.Sleep(10000);
+				}
+			}
+
+			public void Start(string[] args)
+			{
+				this.OnStart(args);
+			}
+			public new void Stop()
+			{
+				this.OnStop();
+			}
+		}
+
 	}
 }
