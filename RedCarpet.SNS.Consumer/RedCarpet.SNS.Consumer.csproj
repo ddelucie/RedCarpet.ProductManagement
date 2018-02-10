@@ -72,6 +72,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnyOfferChangedNotification.cs">
+      <DependentUpon>AnyOfferChangedNotification.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ProductLogic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQSConsumer.cs" />
@@ -92,6 +96,13 @@
       <Project>{30e1377d-f4b8-4561-9562-e08a139323af}</Project>
       <Name>RedCarpet.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RedCarpet.MWS.Products\RedCarpet.MWS.Products.csproj">
+      <Project>{004d0d3f-9156-4f9a-94fa-2cb06d0066c6}</Project>
+      <Name>RedCarpet.MWS.Products</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AnyOfferChangedNotification.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

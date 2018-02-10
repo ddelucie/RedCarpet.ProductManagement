@@ -66,15 +66,22 @@ namespace MWSSubscriptionsService {
                 IMWSResponse response = null;
                 // response = sample.InvokeCreateSubscription();
                 // response = sample.InvokeDeleteSubscription();
-                // response = sample.InvokeDeregisterDestination();
-                // response = sample.InvokeGetSubscription();
-                //response = sample.InvokeListRegisteredDestinations();
-                response = sample.InvokeListSubscriptions();
-                // response = sample.InvokeRegisterDestination();
-                // response = sample.InvokeSendTestNotificationToDestination();
-                // response = sample.InvokeUpdateSubscription();
-                // response = sample.InvokeGetServiceStatus();
-                Console.WriteLine("Response:");
+
+				// succesfully called
+                //response = sample.InvokeRegisterDestination();
+				//RegisterDestinationResponse registerDestinationResponse = (RegisterDestinationResponse)response;
+				//response = sample.InvokeCreateSubscription();
+				//CreateSubscriptionResponse createSubscriptionResponse = (CreateSubscriptionResponse)response;
+
+
+				// response = sample.InvokeGetSubscription();
+				//response = sample.InvokeListRegisteredDestinations();
+				//response = sample.InvokeListSubscriptions();
+				// response = sample.InvokeRegisterDestination();
+				response = sample.InvokeSendTestNotificationToDestination();
+				// response = sample.InvokeUpdateSubscription();
+				// response = sample.InvokeGetServiceStatus();
+				Console.WriteLine("Response:");
                 ResponseHeaderMetadata rhmd = response.ResponseHeaderMetadata;
                 // We recommend logging the request id and timestamp of every call.
                 Console.WriteLine("RequestId: " + rhmd.RequestId);
@@ -98,7 +105,10 @@ namespace MWSSubscriptionsService {
                 Console.WriteLine("ErrorType: " + ex.ErrorType);
                 throw ex;
             }
-        }
+		}
+
+
+		//<CreateSubscriptionResponse xmlns = "http://mws.amazonservices.com/schema/Subscriptions/2013-07-01" >< CreateSubscriptionResult />< ResponseMetadata >< RequestId > fa99adce - 1efe-4b9e-80bf-1b0a3dd665e7</RequestId></ResponseMetadata></CreateSubscriptionResponse>
 
         private readonly MWSSubscriptionsService client;
 
@@ -117,10 +127,20 @@ namespace MWSSubscriptionsService {
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            
             request.MarketplaceId = marketplaceId;
-            Subscription subscription = new Subscription();
-            request.Subscription = subscription;
+			
+			Destination destination = new Destination();
+			destination.DeliveryChannel = "SQS";
+			AttributeKeyValueList attributes = new AttributeKeyValueList();
+			AttributeKeyValue att = new AttributeKeyValue() { Key = "sqsQueueUrl", Value = "https://sqs.us-west-2.amazonaws.com/889329361753/AnyOfferChangedQueue" };
+			attributes.Member.Add(att);
+			destination.AttributeList = attributes;
+
+			Subscription subscription = new Subscription();
+			subscription.Destination = destination;
+			subscription.NotificationType = "AnyOfferChanged";
+			subscription.IsEnabled = true;
+			request.Subscription = subscription;
             return this.client.CreateSubscription(request);
         }
 
@@ -152,7 +172,9 @@ namespace MWSSubscriptionsService {
             
             request.MarketplaceId = marketplaceId;
             Destination destination = new Destination();
-            request.Destination = destination;
+			destination.DeliveryChannel = "SQS";
+
+			request.Destination = destination;
             return this.client.DeregisterDestination(request);
         }
 
@@ -207,8 +229,13 @@ namespace MWSSubscriptionsService {
             
             request.MarketplaceId = marketplaceId;
             Destination destination = new Destination();
-            request.Destination = destination;
-            return this.client.RegisterDestination(request);
+			destination.DeliveryChannel = "SQS";
+			request.Destination = destination;
+			AttributeKeyValueList attributes = new AttributeKeyValueList();
+			AttributeKeyValue att = new AttributeKeyValue() { Key = "sqsQueueUrl", Value = "https://sqs.us-west-2.amazonaws.com/889329361753/AnyOfferChangedQueue" };
+			attributes.Member.Add(att);
+			destination.AttributeList = attributes;
+			return this.client.RegisterDestination(request);
         }
 
         public SendTestNotificationToDestinationResponse InvokeSendTestNotificationToDestination()
@@ -219,10 +246,17 @@ namespace MWSSubscriptionsService {
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            
             request.MarketplaceId = marketplaceId;
-            Destination destination = new Destination();
-            request.Destination = destination;
+
+			Destination destination = new Destination();
+			destination.DeliveryChannel = "SQS";
+			request.Destination = destination;
+			AttributeKeyValueList attributes = new AttributeKeyValueList();
+			AttributeKeyValue att = new AttributeKeyValue() { Key = "sqsQueueUrl", Value = "https://sqs.us-west-2.amazonaws.com/889329361753/AnyOfferChangedQueue" };
+			attributes.Member.Add(att);
+			destination.AttributeList = attributes;
+
+			request.Destination = destination;
             return this.client.SendTestNotificationToDestination(request);
         }
 
