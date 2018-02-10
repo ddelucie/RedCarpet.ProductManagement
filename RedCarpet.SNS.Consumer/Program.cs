@@ -3,6 +3,7 @@ using System.Configuration;
 using System.ServiceProcess;
 using System.Threading;
 using NLog;
+using RedCarpet.Data;
 
 namespace RedCarpet.SNS.Consumer
 {
@@ -11,6 +12,24 @@ namespace RedCarpet.SNS.Consumer
 
 		static void Main(string[] args)
 		{
+
+			//888888888888888888888888888888888888888
+			using (var context = new RedCarpetDBContext())
+			{
+
+				Console.WriteLine("testing");
+
+				var x = new SampleClass
+				{
+					MyProperty = 1
+				};
+
+				context.SampleClasses.Add(x);
+
+				context.SaveChanges();
+			}
+			//88888888888888888888888888888888888888888888888888888888888888888
+
 
 			if (Environment.UserInteractive)
 			{
@@ -56,7 +75,7 @@ namespace RedCarpet.SNS.Consumer
 
 				var appSettings = ConfigurationManager.AppSettings;
 				string queueUrl = appSettings["queueUrl"];
-				string serviceUrl = appSettings["serviceUrl"];
+				string serviceUrl = appSettings["sqsServiceUrl"];
 
 				consumer = new SQSConsumer(queueUrl, serviceUrl, nLogger);
 			}

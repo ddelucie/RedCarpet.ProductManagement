@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A74AE7F5-8EE4-4CB8-A39D-45326A266C56}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RedCarpet.MWS.Subscriptions</RootNamespace>
+    <AssemblyName>RedCarpet.MWS.Subscriptions</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MWSClientCsRuntime-1.0, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MWSClientCsRuntime.1.0.0\lib\net20\MWSClientCsRuntime-1.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttributeKeyValue.cs" />
+    <Compile Include="AttributeKeyValueList.cs" />
+    <Compile Include="CreateSubscriptionInput.cs" />
+    <Compile Include="CreateSubscriptionResponse.cs" />
+    <Compile Include="CreateSubscriptionResult.cs" />
+    <Compile Include="DeleteSubscriptionInput.cs" />
+    <Compile Include="DeleteSubscriptionResponse.cs" />
+    <Compile Include="DeleteSubscriptionResult.cs" />
+    <Compile Include="DeregisterDestinationInput.cs" />
+    <Compile Include="DeregisterDestinationResponse.cs" />
+    <Compile Include="DeregisterDestinationResult.cs" />
+    <Compile Include="Destination.cs" />
+    <Compile Include="DestinationList.cs" />
+    <Compile Include="GetServiceStatusRequest.cs" />
+    <Compile Include="GetServiceStatusResponse.cs" />
+    <Compile Include="GetServiceStatusResult.cs" />
+    <Compile Include="GetSubscriptionInput.cs" />
+    <Compile Include="GetSubscriptionResponse.cs" />
+    <Compile Include="GetSubscriptionResult.cs" />
+    <Compile Include="IMWSResponse.cs" />
+    <Compile Include="ListRegisteredDestinationsInput.cs" />
+    <Compile Include="ListRegisteredDestinationsResponse.cs" />
+    <Compile Include="ListRegisteredDestinationsResult.cs" />
+    <Compile Include="ListSubscriptionsInput.cs" />
+    <Compile Include="ListSubscriptionsResponse.cs" />
+    <Compile Include="ListSubscriptionsResult.cs" />
+    <Compile Include="MWSSubscriptionsService.cs" />
+    <Compile Include="MWSSubscriptionsServiceClient.cs" />
+    <Compile Include="MWSSubscriptionsServiceConfig.cs" />
+    <Compile Include="MWSSubscriptionsServiceException.cs" />
+    <Compile Include="MWSSubscriptionsServiceMock.cs" />
+    <Compile Include="MWSSubscriptionsServiceSample.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterDestinationInput.cs" />
+    <Compile Include="RegisterDestinationResponse.cs" />
+    <Compile Include="RegisterDestinationResult.cs" />
+    <Compile Include="ResponseHeaderMetadata.cs" />
+    <Compile Include="ResponseMetadata.cs" />
+    <Compile Include="SendTestNotificationToDestinationInput.cs" />
+    <Compile Include="SendTestNotificationToDestinationResponse.cs" />
+    <Compile Include="SendTestNotificationToDestinationResult.cs" />
+    <Compile Include="Subscription.cs" />
+    <Compile Include="SubscriptionList.cs" />
+    <Compile Include="UpdateSubscriptionInput.cs" />
+    <Compile Include="UpdateSubscriptionResponse.cs" />
+    <Compile Include="UpdateSubscriptionResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
