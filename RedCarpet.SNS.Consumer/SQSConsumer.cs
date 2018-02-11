@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using NLog;
+using RedCarpet.Data;
 
 namespace RedCarpet.SNS.Consumer
 {
@@ -14,14 +15,14 @@ namespace RedCarpet.SNS.Consumer
 		string queueUrl = "https://sqs.us-west-2.amazonaws.com/324811268269/ConsoleTest";
 		string serviceUrl = "http://sqs.us-west-2.amazonaws.com";
 		ILogger nLogger;
-
+		IDataRepository dataRepository;
 		AmazonSQSConfig sqsConfig;
 		AmazonSQSClient sqsClient;
 
 		public SQSConsumer()
 		{ Initialize(); }
 
-		public SQSConsumer(string queueUrl, string serviceUrl, ILogger nLogger)
+		public SQSConsumer(string queueUrl, string serviceUrl, ILogger nLogger, IDataRepository dataRepository)
 		{
 			nLogger.Log(LogLevel.Info, "SQSConsumer Initializing");
 			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
@@ -30,6 +31,7 @@ namespace RedCarpet.SNS.Consumer
 			this.queueUrl = queueUrl;
 			this.serviceUrl = serviceUrl;
 			this.nLogger = nLogger;
+			this.dataRepository = dataRepository;
 			Initialize();
 		}
 
@@ -65,6 +67,11 @@ namespace RedCarpet.SNS.Consumer
 				nLogger.Log(LogLevel.Info, string.Format("Message deleted: {0}", message.MessageId));
 
 			}
+		}
+
+		public void ProcessMessage(Notification notification)
+		{
+			
 		}
 	}
 }

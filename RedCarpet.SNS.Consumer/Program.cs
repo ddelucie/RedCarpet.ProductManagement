@@ -65,6 +65,7 @@ namespace RedCarpet.SNS.Consumer
 		{
 
 			ILogger nLogger = LogManager.GetLogger("SQS Consumer Logger");
+			IDataRepository dataRepository = new DataRepository();
 
 			Thread thread;
 			SQSConsumer consumer;
@@ -77,7 +78,7 @@ namespace RedCarpet.SNS.Consumer
 				string queueUrl = appSettings["queueUrl"];
 				string serviceUrl = appSettings["sqsServiceUrl"];
 
-				consumer = new SQSConsumer(queueUrl, serviceUrl, nLogger);
+				consumer = new SQSConsumer(queueUrl, serviceUrl, nLogger, dataRepository);
 			}
 
 			protected override void OnStart(string[] args)

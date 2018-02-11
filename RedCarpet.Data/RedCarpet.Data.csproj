@@ -51,8 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDataRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model2.cs" />
+    <Compile Include="DataRepository.cs" />
     <Compile Include="SampleClass.cs" />
     <Compile Include="RedCarpetDBContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
