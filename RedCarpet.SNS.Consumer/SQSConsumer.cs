@@ -71,7 +71,14 @@ namespace RedCarpet.SNS.Consumer
 
 		public void ProcessMessage(Notification notification)
 		{
-			
+			string asin = notification.NotificationPayload.AnyOfferChangedNotification.OfferChangeTrigger.ASIN;
+			nLogger.Log(LogLevel.Info, string.Format("asin: {0}", asin));
+
+			//dataRepository.GetFirstAsync<>()
+			nLogger.Log(LogLevel.Info, string.Format("Found product: {0}", asin));
+			dynamic product = null;
+			PricingResult pricingResult = ProductLogic.SetPrice(notification, product);
+
 		}
 	}
 }

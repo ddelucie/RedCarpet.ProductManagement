@@ -40,7 +40,7 @@ namespace RedCarpet.SNS.Consumer
 			return pricingResult;
 		}
 
-		public static PriceCategory FindPriceCategory(decimal landedPrice, dynamic product)
+		private static PriceCategory FindPriceCategory(decimal landedPrice, dynamic product)
 		{
 			PriceCategory price = PriceCategory.Max;
 			if (landedPrice == 0m) price = PriceCategory.Max;
@@ -50,7 +50,7 @@ namespace RedCarpet.SNS.Consumer
 			return price;
 		}
 
-		public static decimal FindBuyBoxPrice(Notification notification, dynamic product)
+		private static decimal FindBuyBoxPrice(Notification notification, dynamic product)
 		{
 			decimal buyBoxPrice = 0m;
 			if (notification == null) return buyBoxPrice;
