@@ -7,8 +7,8 @@
     <ProjectGuid>{8D268EED-9961-4EA6-B823-240C073C1830}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RedCarpet.SNS.Consumer</RootNamespace>
-    <AssemblyName>RedCarpet.SNS.Consumer</AssemblyName>
+    <RootNamespace>RedCarpet.SQS.Consumer</RootNamespace>
+    <AssemblyName>RedCarpet.SQS.Consumer</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

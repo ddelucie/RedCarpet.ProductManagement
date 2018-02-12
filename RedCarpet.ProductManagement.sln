@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCarpet.SNS.Consumer", "RedCarpet.SNS.Consumer\RedCarpet.SNS.Consumer.csproj", "{8D268EED-9961-4EA6-B823-240C073C1830}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCarpet.SQS.Consumer", "RedCarpet.SNS.Consumer\RedCarpet.SQS.Consumer.csproj", "{8D268EED-9961-4EA6-B823-240C073C1830}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCarpet.MWS.Common", "RedCarpet.MWS.Common\RedCarpet.MWS.Common.csproj", "{3B1F9F22-5586-4F53-BB51-E7F46A1E0964}"
 EndProject
