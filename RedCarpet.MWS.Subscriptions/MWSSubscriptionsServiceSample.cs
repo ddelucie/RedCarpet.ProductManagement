@@ -17,6 +17,8 @@
 using MWSSubscriptionsService.Model;
 using System;
 using System.Collections.Generic;
+using Amazon.Runtime.CredentialManagement;
+using Amazon.Runtime;
 
 namespace MWSSubscriptionsService {
 
@@ -31,11 +33,17 @@ namespace MWSSubscriptionsService {
 
         public static void Main(string[] args)
         {
+			var chain = new CredentialProfileStoreChain();
+			AWSCredentials awsCredentials;
+			chain.TryGetAWSCredentials("RedCarpet", out awsCredentials);
+			var creds = awsCredentials.GetCredentials();
+
+
 			// Developer AWS access key
-			string accessKey = "AKIAI5X4MRMW7C6MUYZA";
+			string accessKey = creds.AccessKey;
 
 			// Developer AWS secret key
-			string secretKey = " ";
+			string secretKey = creds.SecretKey;
 
 			// The client application name
 			string appName = "CSharpSampleCode";

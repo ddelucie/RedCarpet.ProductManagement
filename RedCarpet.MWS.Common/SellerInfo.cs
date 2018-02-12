@@ -1,9 +1,7 @@
 ﻿namespace RedCarpet.MWS.Common
 {
-	public class AWSCredentials
+	public class SellerInfo
 	{
-		private string accessKey = "AKIAJZY7ZVPLTWQYHWYA";
-		private string secretKey = " ";
 		private string appName = "CSharpSampleCode";
 		private string appVersion = "1.0";
 		private string sellerId = "ARA1ZW7ZHL5MQ";
@@ -11,29 +9,7 @@
 		private string marketplaceId = "ATVPDKIKX0DER";
 		private string serviceUrl = "http://sns.us-west-2.amazonaws.com";
 
-		public string AccessKey
-		{
-			get
-			{
-				return this.accessKey;
-			}
-			set
-			{
-				this.accessKey = value;
-			}
-		}
-
-		public string SecretKey
-		{
-			get
-			{
-				return this.secretKey;
-			}
-			set
-			{
-				this.secretKey = value;
-			}
-		}
+		
 
 		public string SellerId
 		{
