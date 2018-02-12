@@ -88,7 +88,7 @@ namespace RedCarpet.SQS.Consumer
 					}
 					catch (Exception e)
 					{
-						nLogger.Log(LogLevel.Error, "*ERROR* " + e.Message);
+						 nLogger.Log(LogLevel.Error, "*ERROR* " + e.Message);
 					}
 					if (isQueueEmpty)
 					{
