@@ -5,14 +5,15 @@ namespace RedCarpet.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<RedCarpet.Data.Model2>
+    internal sealed class Configuration : DbMigrationsConfiguration<RedCarpet.Data.RedCarpetDBContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            ContextKey = "RedCarpet.Data.RedCarpetDBContext";
         }
 
-        protected override void Seed(RedCarpet.Data.Model2 context)
+        protected override void Seed(RedCarpet.Data.RedCarpetDBContext context)
         {
             //  This method will be called after migrating to the latest version.
 

@@ -71,12 +71,22 @@ namespace RedCarpet.Data
 			return await GetQueryable<TEntity>(filter).FirstOrDefaultAsync();
 		}
 
+		public void Create<TEntity>(TEntity entity) where TEntity : class
+		{
+			using (var context = new RedCarpetDBContext())
+			{
+				context.Set<TEntity>().Add(entity);
+				context.SaveChanges();
+			}
+		}
+
 		public void Update<TEntity>(TEntity entity) where TEntity : class
 		{
 			using (var context = new RedCarpetDBContext())
 			{
 				context.Set<TEntity>().Attach(entity);
 				context.Entry(entity).State = EntityState.Modified;
+				context.SaveChanges();
 			}
 		}
 	}

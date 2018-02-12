@@ -13,24 +13,6 @@ namespace RedCarpet.SNS.Consumer
 		static void Main(string[] args)
 		{
 
-			//888888888888888888888888888888888888888
-			using (var context = new RedCarpetDBContext())
-			{
-
-				Console.WriteLine("testing");
-
-				var x = new SampleClass
-				{
-					MyProperty = 1
-				};
-
-				context.SampleClasses.Add(x);
-
-				context.SaveChanges();
-			}
-			//88888888888888888888888888888888888888888888888888888888888888888
-
-
 			if (Environment.UserInteractive)
 			{
 				// running as console app
@@ -84,7 +66,7 @@ namespace RedCarpet.SNS.Consumer
 			protected override void OnStart(string[] args)
 			{
 				Console.WriteLine("Starting " + ServiceName);
-				nLogger.Log(LogLevel.Info, "Starting " + ServiceName);
+				nLogger.Log(LogLevel.Info, "*** Starting " + ServiceName);
 				thread = new Thread(this.DoWork);
 				thread.Start();
 			}
@@ -92,15 +74,28 @@ namespace RedCarpet.SNS.Consumer
 			protected override void OnStop()
 			{
 				Console.WriteLine("Stopping " + ServiceName);
-				nLogger.Log(LogLevel.Info, "Stopping " + ServiceName);
+				nLogger.Log(LogLevel.Info, "*** Stopping " + ServiceName);
 				thread.Abort();
 			}
 			public void DoWork()
 			{
 				while (true)
 				{
-					consumer.Process();
-					Thread.Sleep(10000);
+					bool isQueueEmpty = false;
+					try
+					{
+						isQueueEmpty = consumer.Process();
+					}
+					catch (Exception e)
+					{
+						nLogger.Log(LogLevel.Error, "*ERROR* " + e.Message);
+					}
+					if (isQueueEmpty)
+					{
+						nLogger.Log(LogLevel.Info, "Queue is empty");
+
+						Thread.Sleep(10000);
+					}
 				}
 			}
 

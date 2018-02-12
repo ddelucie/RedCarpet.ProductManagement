@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using NLog;
 using RedCarpet.Data;
+using RedCarpet.Data.Model;
 
 namespace RedCarpet.SNS.Consumer
 {
@@ -45,40 +49,97 @@ namespace RedCarpet.SNS.Consumer
 			sqsClient = new AmazonSQSClient(sqsConfig);
 		}
 
-		public void Process()
+		public bool Process()
 		{
-
+			bool isQueueEmpty = false;
 			var receiveMessageRequest = new ReceiveMessageRequest();
 
 			receiveMessageRequest.QueueUrl = queueUrl;
-
+			receiveMessageRequest.MaxNumberOfMessages = 5;
 			var receiveMessageResponse = sqsClient.ReceiveMessage(receiveMessageRequest);
 
+			if (receiveMessageResponse.Messages.Count == 0) isQueueEmpty = true;
 
 			foreach (var message in receiveMessageResponse.Messages)
 			{
 
-				nLogger.Log(LogLevel.Info, string.Format("Message received: {0} || {1}", message.MessageId, message.Body));
+				nLogger.Log(LogLevel.Info, string.Format("Message received: {0}", message.MessageId));
 
-				DeleteMessageResponse objDeleteMessageResponse = new DeleteMessageResponse();
-				var deleteMessageRequest = new DeleteMessageRequest() { QueueUrl = queueUrl, ReceiptHandle = message.ReceiptHandle };
-				objDeleteMessageResponse = sqsClient.DeleteMessage(deleteMessageRequest);
+				Notification notification = null;
 
-				nLogger.Log(LogLevel.Info, string.Format("Message deleted: {0}", message.MessageId));
+
+				try
+				{
+					notification = DeserializeNotification(message);
+				}
+				catch (Exception ex)
+				{
+					ex.Data.Add("message.Body", message.Body);
+					nLogger.Log(LogLevel.Error, "DeserializeNotification failed");
+					DeleteMessge(message);
+					throw;
+				}
+
+				ProcessMessage(notification);
+
+				nLogger.Log(LogLevel.Info, string.Format("Processed notification"));
+
+				DeleteMessge(message);
 
 			}
+			return isQueueEmpty;
+		}
+
+		private Notification DeserializeNotification(Message message)
+		{
+			XmlSerializer serializer = new XmlSerializer(typeof(Notification));
+
+			Notification notification;
+
+			using (TextReader reader = new StringReader(message.Body))
+			{
+				notification = (Notification)serializer.Deserialize(reader);
+			}
+
+			nLogger.Log(LogLevel.Info, string.Format("Deserialized notification"));
+			return notification;
+		}
+
+		private void DeleteMessge(Message message)
+		{
+			DeleteMessageResponse objDeleteMessageResponse = new DeleteMessageResponse();
+			var deleteMessageRequest = new DeleteMessageRequest() { QueueUrl = queueUrl, ReceiptHandle = message.ReceiptHandle };
+			objDeleteMessageResponse = sqsClient.DeleteMessage(deleteMessageRequest);
+			nLogger.Log(LogLevel.Info, string.Format("Message deleted: {0}", message.MessageId));
+
 		}
 
 		public void ProcessMessage(Notification notification)
 		{
-			string asin = notification.NotificationPayload.AnyOfferChangedNotification.OfferChangeTrigger.ASIN;
-			nLogger.Log(LogLevel.Info, string.Format("asin: {0}", asin));
+			//dataRepository.GetFirstAsync<>() TODO: get product
 
-			//dataRepository.GetFirstAsync<>()
-			nLogger.Log(LogLevel.Info, string.Format("Found product: {0}", asin));
-			dynamic product = null;
+			//#####################################################
+			dynamic product = new ExpandoObject();  // TODO:  real product
+			product.MaxPrice = 100.0m;
+			product.MinPrice = 10.0m;
+			product.CurrentPrice = 20.0m;
+			//#####################################################
+
 			PricingResult pricingResult = ProductLogic.SetPrice(notification, product);
 
+			nLogger.Log(LogLevel.Info, string.Format("ASIN: {0}", pricingResult.ASIN));
+
+			if (pricingResult.IsPriceChanged)
+			{
+				nLogger.Log(LogLevel.Info, string.Format("Price changed: {0}", pricingResult.NewPrice));
+
+				// TODO: update price on Amazon
+				//dataRepository.GetFirstAsync<>( )
+			}
+
+			//add history
+			pricingResult.DateEntry = DateTime.UtcNow;
+			dataRepository.Create(pricingResult);
 		}
 	}
 }

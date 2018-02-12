@@ -11,5 +11,7 @@ namespace RedCarpet.Data
 	{
 		[Key]
 		public int MyProperty { get; set; }
+		public int MyProperty2 { get; set; }
+
 	}
 }

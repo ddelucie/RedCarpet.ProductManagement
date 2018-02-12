@@ -52,9 +52,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDataRepository.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model2.cs" />
     <Compile Include="DataRepository.cs" />
+    <Compile Include="Migrations\201802112128025_InitialCreate.cs" />
+    <Compile Include="Migrations\201802112128025_InitialCreate.Designer.cs">
+      <DependentUpon>201802112128025_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802112134044_First.cs" />
+    <Compile Include="Migrations\201802112134044_First.Designer.cs">
+      <DependentUpon>201802112134044_First.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802112303571_PricingResult Added.cs" />
+    <Compile Include="Migrations\201802112303571_PricingResult Added.Designer.cs">
+      <DependentUpon>201802112303571_PricingResult Added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802112305278_PricingResultUpdate1.cs" />
+    <Compile Include="Migrations\201802112305278_PricingResultUpdate1.Designer.cs">
+      <DependentUpon>201802112305278_PricingResultUpdate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802112323358_PricingResultUpdate2.cs" />
+    <Compile Include="Migrations\201802112323358_PricingResultUpdate2.Designer.cs">
+      <DependentUpon>201802112323358_PricingResultUpdate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\PricingResult.cs" />
     <Compile Include="SampleClass.cs" />
     <Compile Include="RedCarpetDBContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +84,23 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201802112128025_InitialCreate.resx">
+      <DependentUpon>201802112128025_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802112134044_First.resx">
+      <DependentUpon>201802112134044_First.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802112303571_PricingResult Added.resx">
+      <DependentUpon>201802112303571_PricingResult Added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802112305278_PricingResultUpdate1.resx">
+      <DependentUpon>201802112305278_PricingResultUpdate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802112323358_PricingResultUpdate2.resx">
+      <DependentUpon>201802112323358_PricingResultUpdate2.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

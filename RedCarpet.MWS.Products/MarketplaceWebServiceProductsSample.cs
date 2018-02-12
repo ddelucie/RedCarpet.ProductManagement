@@ -31,26 +31,26 @@ namespace MarketplaceWebServiceProducts {
 
         public static void Main(string[] args)
         {
-            // TODO: Set the below configuration variables before attempting to run
+			// Developer AWS access key
+			string accessKey = "AKIAI5X4MRMW7C6MUYZA";
 
-            // Developer AWS access key
-            string accessKey = "replaceWithAccessKey";
+			// Developer AWS secret key
+			string secretKey = "Qr6ucvVwyasOnhDIcH939VZE/cYDczsAXmghpQtN";
 
-            // Developer AWS secret key
-            string secretKey = "replaceWithSecretKey";
+			// The client application name
+			string appName = "CSharpSampleCode";
 
-            // The client application name
-            string appName = "CSharpSampleCode";
+			// The client application version
+			string appVersion = "1.0";
 
-            // The client application version
-            string appVersion = "1.0";
+			string sellerId = "ARA1ZW7ZHL5MQ";
+			string marketplaceId = "ATVPDKIKX0DER";
+			// The endpoint for region service and version (see developer guide)
+			// ex: https://mws.amazonservices.com
+			string serviceURL = "https://mws.amazonservices.com";
 
-            // The endpoint for region service and version (see developer guide)
-            // ex: https://mws.amazonservices.com
-            string serviceURL = "replaceWithServiceURL";
-
-            // Create a configuration object
-            MarketplaceWebServiceProductsConfig config = new MarketplaceWebServiceProductsConfig();
+			// Create a configuration object
+			MarketplaceWebServiceProductsConfig config = new MarketplaceWebServiceProductsConfig();
             config.ServiceURL = serviceURL;
             // Set other client connection configurations here if needed
             // Create the client itself
@@ -64,7 +64,7 @@ namespace MarketplaceWebServiceProducts {
             try 
             {
                 IMWSResponse response = null;
-                // response = sample.InvokeGetCompetitivePricingForASIN();
+                response = sample.InvokeGetCompetitivePricingForASIN();
                 // response = sample.InvokeGetCompetitivePricingForSKU();
                 // response = sample.InvokeGetLowestOfferListingsForASIN();
                 // response = sample.InvokeGetLowestOfferListingsForSKU();
@@ -106,8 +106,9 @@ namespace MarketplaceWebServiceProducts {
         }
 
         private readonly MarketplaceWebServiceProducts client;
-
-        public MarketplaceWebServiceProductsSample(MarketplaceWebServiceProducts client)
+		string sellerId = "ARA1ZW7ZHL5MQ";
+		string marketplaceId = "ATVPDKIKX0DER";
+		public MarketplaceWebServiceProductsSample(MarketplaceWebServiceProducts client)
         {
             this.client = client;
         }
@@ -116,26 +117,29 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetCompetitivePricingForASINRequest request = new GetCompetitivePricingForASINRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             ASINListType asinList = new ASINListType();
             request.ASINList = asinList;
-            return this.client.GetCompetitivePricingForASIN(request);
+			//ASINIdentifier asin = new ASINIdentifier(marketplaceId, "B00005JC8K");
+			asinList.ASIN.Add("B00005JC8K");
+
+			return this.client.GetCompetitivePricingForASIN(request);
         }
 
         public GetCompetitivePricingForSKUResponse InvokeGetCompetitivePricingForSKU()
         {
             // Create a request.
             GetCompetitivePricingForSKURequest request = new GetCompetitivePricingForSKURequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             SellerSKUListType sellerSKUList = new SellerSKUListType();
             request.SellerSKUList = sellerSKUList;
@@ -146,15 +150,15 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetLowestOfferListingsForASINRequest request = new GetLowestOfferListingsForASINRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             ASINListType asinList = new ASINListType();
             request.ASINList = asinList;
-            string itemCondition = "example";
+            string itemCondition = "new";
             request.ItemCondition = itemCondition;
             bool excludeMe = true;
             request.ExcludeMe = excludeMe;
@@ -165,15 +169,15 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetLowestOfferListingsForSKURequest request = new GetLowestOfferListingsForSKURequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             SellerSKUListType sellerSKUList = new SellerSKUListType();
             request.SellerSKUList = sellerSKUList;
-            string itemCondition = "example";
+            string itemCondition = "new";
             request.ItemCondition = itemCondition;
             bool excludeMe = true;
             request.ExcludeMe = excludeMe;
@@ -184,15 +188,15 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetLowestPricedOffersForASINRequest request = new GetLowestPricedOffersForASINRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             string asin = "example";
             request.ASIN = asin;
-            string itemCondition = "example";
+            string itemCondition = "new";
             request.ItemCondition = itemCondition;
             return this.client.GetLowestPricedOffersForASIN(request);
         }
@@ -201,15 +205,15 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetLowestPricedOffersForSKURequest request = new GetLowestPricedOffersForSKURequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             string sellerSKU = "example";
             request.SellerSKU = sellerSKU;
-            string itemCondition = "example";
+            string itemCondition = "new";
             request.ItemCondition = itemCondition;
             return this.client.GetLowestPricedOffersForSKU(request);
         }
@@ -218,11 +222,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetMatchingProductRequest request = new GetMatchingProductRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             ASINListType asinList = new ASINListType();
             request.ASINList = asinList;
@@ -233,11 +237,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetMatchingProductForIdRequest request = new GetMatchingProductForIdRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             string idType = "example";
             request.IdType = idType;
@@ -250,7 +254,7 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetMyFeesEstimateRequest request = new GetMyFeesEstimateRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
@@ -263,11 +267,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetMyPriceForASINRequest request = new GetMyPriceForASINRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             ASINListType asinList = new ASINListType();
             request.ASINList = asinList;
@@ -278,11 +282,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetMyPriceForSKURequest request = new GetMyPriceForSKURequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             SellerSKUListType sellerSKUList = new SellerSKUListType();
             request.SellerSKUList = sellerSKUList;
@@ -293,11 +297,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetProductCategoriesForASINRequest request = new GetProductCategoriesForASINRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             string asin = "example";
             request.ASIN = asin;
@@ -308,11 +312,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetProductCategoriesForSKURequest request = new GetProductCategoriesForSKURequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             string sellerSKU = "example";
             request.SellerSKU = sellerSKU;
@@ -323,7 +327,7 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetServiceStatusRequest request = new GetServiceStatusRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
@@ -334,11 +338,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             ListMatchingProductsRequest request = new ListMatchingProductsRequest();
-            string sellerId = "example";
+            
             request.SellerId = sellerId;
             string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
-            string marketplaceId = "example";
+            
             request.MarketplaceId = marketplaceId;
             string query = "example";
             request.Query = query;
