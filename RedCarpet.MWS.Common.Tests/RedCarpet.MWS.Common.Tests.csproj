@@ -68,6 +68,10 @@
       <Project>{3b1f9f22-5586-4f53-bb51-e7f46a1e0964}</Project>
       <Name>RedCarpet.MWS.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RedCarpet.MWS.Feeds\RedCarpet.MWS.Feeds.csproj">
+      <Project>{7373ee50-d16a-4558-bd3e-535b90948c0c}</Project>
+      <Name>RedCarpet.MWS.Feeds</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RedCarpet.MWS.Subscriptions\RedCarpet.MWS.Subscriptions.csproj">
       <Project>{a74ae7f5-8ee4-4cb8-a39d-45326a266c56}</Project>
       <Name>RedCarpet.MWS.Subscriptions</Name>
