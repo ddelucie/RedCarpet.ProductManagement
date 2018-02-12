@@ -5,7 +5,7 @@ using System.Threading;
 using NLog;
 using RedCarpet.Data;
 
-namespace RedCarpet.SNS.Consumer
+namespace RedCarpet.SQS.Consumer
 {
 	class Program
 	{

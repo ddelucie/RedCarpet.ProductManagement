@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RedCarpet.Data.Model;
 
-namespace RedCarpet.SNS.Consumer
+namespace RedCarpet.SQS.Consumer
 {
 	//public class PricingResult
 	//{

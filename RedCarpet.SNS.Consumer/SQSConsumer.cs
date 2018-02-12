@@ -12,7 +12,7 @@ using NLog;
 using RedCarpet.Data;
 using RedCarpet.Data.Model;
 
-namespace RedCarpet.SNS.Consumer
+namespace RedCarpet.SQS.Consumer
 {
 	public class SQSConsumer
 	{

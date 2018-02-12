@@ -23,7 +23,7 @@ namespace MarketplaceWebServiceProducts
     /// <summary>
     /// This is the Products API section of the Marketplace Web Service.
     /// </summary>
-    public interface MarketplaceWebServiceProducts 
+    public interface IMarketplaceWebServiceProducts 
     {
 
         /// <summary>

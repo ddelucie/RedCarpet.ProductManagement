@@ -54,7 +54,7 @@ namespace MarketplaceWebServiceProducts {
             config.ServiceURL = serviceURL;
             // Set other client connection configurations here if needed
             // Create the client itself
-            MarketplaceWebServiceProducts client = new MarketplaceWebServiceProductsClient(appName, appVersion, accessKey, secretKey, config);
+            IMarketplaceWebServiceProducts client = new MarketplaceWebServiceProductsClient(appName, appVersion, accessKey, secretKey, config);
 
             MarketplaceWebServiceProductsSample sample = new MarketplaceWebServiceProductsSample(client);
 
@@ -105,10 +105,10 @@ namespace MarketplaceWebServiceProducts {
             }
         }
 
-        private readonly MarketplaceWebServiceProducts client;
+        private readonly IMarketplaceWebServiceProducts client;
 		string sellerId = "ARA1ZW7ZHL5MQ";
 		string marketplaceId = "ATVPDKIKX0DER";
-		public MarketplaceWebServiceProductsSample(MarketplaceWebServiceProducts client)
+		public MarketplaceWebServiceProductsSample(IMarketplaceWebServiceProducts client)
         {
             this.client = client;
         }

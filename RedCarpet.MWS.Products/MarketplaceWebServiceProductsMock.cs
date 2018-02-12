@@ -33,7 +33,7 @@ namespace MarketplaceWebServiceProducts.Mock
     ///
     /// Note, current Mock Service implementation does not validate requests
     /// </remarks>
-    public class MarketplaceWebServiceProductsMock : MarketplaceWebServiceProducts
+    public class MarketplaceWebServiceProductsMock : IMarketplaceWebServiceProducts
     {
 
         public GetCompetitivePricingForASINResponse GetCompetitivePricingForASIN(GetCompetitivePricingForASINRequest request)

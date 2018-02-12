@@ -124,7 +124,7 @@
     <Compile Include="Model\LowestOfferListingType.cs" />
     <Compile Include="Model\LowestPrices.cs" />
     <Compile Include="Model\LowestPriceType.cs" />
-    <Compile Include="MarketplaceWebServiceProducts.cs" />
+    <Compile Include="IMarketplaceWebServiceProducts.cs" />
     <Compile Include="MarketplaceWebServiceProductsClient.cs" />
     <Compile Include="MarketplaceWebServiceProductsConfig.cs" />
     <Compile Include="MarketplaceWebServiceProductsException.cs" />

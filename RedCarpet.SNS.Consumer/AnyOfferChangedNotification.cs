@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace RedCarpet.SNS.Consumer
+namespace RedCarpet.SQS.Consumer
 {
 	[XmlRoot(ElementName = "NotificationMetaData")]
 	public class NotificationMetaData
