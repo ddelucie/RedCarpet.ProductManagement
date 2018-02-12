@@ -3,7 +3,7 @@
 	public class AWSCredentials
 	{
 		private string accessKey = "AKIAJZY7ZVPLTWQYHWYA";
-		private string secretKey = "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";
+		private string secretKey = " ";
 		private string appName = "CSharpSampleCode";
 		private string appVersion = "1.0";
 		private string sellerId = "ARA1ZW7ZHL5MQ";

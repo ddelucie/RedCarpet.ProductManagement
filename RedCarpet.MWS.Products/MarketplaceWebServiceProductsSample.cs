@@ -35,7 +35,7 @@ namespace MarketplaceWebServiceProducts {
 			string accessKey = "AKIAI5X4MRMW7C6MUYZA";
 
 			// Developer AWS secret key
-			string secretKey = "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";
+			string secretKey = " ";
 
 			// The client application name
 			string appName = "CSharpSampleCode";

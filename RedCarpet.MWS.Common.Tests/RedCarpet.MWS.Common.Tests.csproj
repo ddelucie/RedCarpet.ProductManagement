@@ -62,7 +62,7 @@
   <ItemGroup>
     <Compile Include="SubscriptionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MWSSubscriptionTests.cs" />
+    <Compile Include="FeedsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RedCarpet.MWS.Common\RedCarpet.MWS.Common.csproj">
