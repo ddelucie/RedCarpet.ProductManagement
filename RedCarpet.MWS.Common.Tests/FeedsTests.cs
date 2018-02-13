@@ -10,23 +10,36 @@ namespace RedCarpet.MWS.Common.Tests
 	[TestClass]
 	public class FeedsTests
 	{
-		[TestMethod]
-		public void GetReportCountTest()
+
+		ImmutableCredentials creds;
+		// The client application name
+		string appName = "CSharpSampleCode";
+
+		// The client application version
+		string appVersion = "1.0";
+		string serviceURL = "https://mws.amazonservices.com";
+
+		string sellerId = "ARA1ZW7ZHL5MQ";
+		string marketplaceId = "ATVPDKIKX0DER";
+
+		public FeedsTests()
 		{
 			var chain = new CredentialProfileStoreChain();
 			AWSCredentials awsCredentials;
 			chain.TryGetAWSCredentials("RedCarpet MWS", out awsCredentials);
-			var creds = awsCredentials.GetCredentials();
+			creds = awsCredentials.GetCredentials();
+		}
 
-			// The client application name
-			string appName = "CSharpSampleCode";
+		[TestMethod]
+		public void Feedest()
+		{
 
-			// The client application version
-			string appVersion = "1.0";
-			string serviceURL = "https://mws.amazonservices.com";
+		}
 
-			string sellerId = "ARA1ZW7ZHL5MQ";
-			string marketplaceId = "ATVPDKIKX0DER";
+		[TestMethod]
+		public void GetReportCountTest()
+		{
+			
 			MarketplaceWebServiceConfig config = new MarketplaceWebServiceConfig();
 			config.ServiceURL = serviceURL;
 
