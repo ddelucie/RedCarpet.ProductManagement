@@ -73,8 +73,13 @@
     <Compile Include="Migrations\201802112323358_PricingResultUpdate2.Designer.cs">
       <DependentUpon>201802112323358_PricingResultUpdate2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802140651339_Product.cs" />
+    <Compile Include="Migrations\201802140651339_Product.Designer.cs">
+      <DependentUpon>201802140651339_Product.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\PricingResult.cs" />
+    <Compile Include="Model\Product.cs" />
     <Compile Include="SampleClass.cs" />
     <Compile Include="RedCarpetDBContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +105,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802112323358_PricingResultUpdate2.resx">
       <DependentUpon>201802112323358_PricingResultUpdate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802140651339_Product.resx">
+      <DependentUpon>201802140651339_Product.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

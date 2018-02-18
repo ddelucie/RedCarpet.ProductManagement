@@ -116,14 +116,9 @@ namespace RedCarpet.SQS.Consumer
 
 		public void ProcessMessage(Notification notification)
 		{
-			//dataRepository.GetFirstAsync<>() TODO: get product
+			string asin = notification.NotificationPayload.AnyOfferChangedNotification.OfferChangeTrigger.ASIN;
 
-			//#####################################################
-			dynamic product = new ExpandoObject();  // TODO:  real product
-			product.MaxPrice = 100.0m;
-			product.MinPrice = 10.0m;
-			product.CurrentPrice = 20.0m;
-			//#####################################################
+			Product product = dataRepository.GetFirstAsync<Product>(x => x.ASIN == asin).Result;
 
 			PricingResult pricingResult = ProductLogic.SetPrice(notification, product);
 
@@ -135,6 +130,10 @@ namespace RedCarpet.SQS.Consumer
 
 				// TODO: update price on Amazon
 				//dataRepository.GetFirstAsync<>( )
+
+				// update the product table
+				product.CurrentPrice = pricingResult.NewPrice;
+				dataRepository.Update(product);
 			}
 
 			//add history

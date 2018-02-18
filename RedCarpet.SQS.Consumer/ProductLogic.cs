@@ -25,14 +25,14 @@ namespace RedCarpet.SQS.Consumer
 
 	public static class ProductLogic
 	{
-		public static PricingResult SetPrice(Notification notification, dynamic product)
+		public static PricingResult SetPrice(Notification notification, Product product)
 		{
 			PricingResult pricingResult = BuildPricingResult(notification);
 			decimal buyBoxPrice = pricingResult.LandedPrice; // Using LandedPrice
 
-			// populate Product values // TODO:  real product
-			pricingResult.MaxPrice = product.MaxPrice;
-			pricingResult.MinPrice = product.MinPrice;
+			// populate Product values 
+			pricingResult.MaxPrice = product.MaxAmazonSellPrice;
+			pricingResult.MinPrice = product.MinAmazonSellPrice;
 			pricingResult.OriginalPrice = product.CurrentPrice;
 
 			pricingResult.PriceCategorySelected = FindPriceCategory(buyBoxPrice, product);
@@ -45,11 +45,11 @@ namespace RedCarpet.SQS.Consumer
 			return pricingResult;
 		}
 
-		private static string FindPriceCategory(decimal landedPrice, dynamic product)
+		private static string FindPriceCategory(decimal landedPrice, Product product)
 		{
 			string price = PriceCategory.Max;
 			if (landedPrice == 0m) price = PriceCategory.Max;
-			if (landedPrice < product.MinPrice) price = PriceCategory.Min;
+			if (landedPrice < product.MinAmazonSellPrice) price = PriceCategory.Min;
 			else price = PriceCategory.BuyBox;
 
 			return price;

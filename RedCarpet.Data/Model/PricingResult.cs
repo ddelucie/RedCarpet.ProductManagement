@@ -35,7 +35,7 @@ namespace RedCarpet.Data.Model
 		{
 			get
 			{
-				return NewPrice != OriginalPrice;
+				return NewPrice - OriginalPrice >= 0.01m;
 			}
 		}
 		public DateTime DateEntry { get; set; }

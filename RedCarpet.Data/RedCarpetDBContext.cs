@@ -12,6 +12,7 @@ namespace RedCarpet.Data
 	{
 		public virtual DbSet<SampleClass> SampleClasses { get; set; }
 		public virtual DbSet<PricingResult> PricingResults { get; set; }
+		public virtual DbSet<Product> Products { get; set; }
 
 	}
 

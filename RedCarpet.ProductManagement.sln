@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCarpet.MWS.Feeds", "RedC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCarpet.SQS.Consumer", "RedCarpet.SQS.Consumer\RedCarpet.SQS.Consumer.csproj", "{8D268EED-9961-4EA6-B823-240C073C1830}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCarpet.Data.Tests", "RedCarpet.Data.Tests\RedCarpet.Data.Tests.csproj", "{01D365C4-168A-4017-9814-C34F0E92892D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{8D268EED-9961-4EA6-B823-240C073C1830}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D268EED-9961-4EA6-B823-240C073C1830}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D268EED-9961-4EA6-B823-240C073C1830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D365C4-168A-4017-9814-C34F0E92892D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D365C4-168A-4017-9814-C34F0E92892D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D365C4-168A-4017-9814-C34F0E92892D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D365C4-168A-4017-9814-C34F0E92892D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

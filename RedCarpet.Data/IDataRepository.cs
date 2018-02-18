@@ -9,7 +9,7 @@ namespace RedCarpet.Data
 {
 	public interface IDataRepository
 	{
-		Task<T> Find<T>(string id) where T : class;
+		Task<T> Find<T>(int id) where T : class;
 		void Create<T>(T entity) where T : class;
 		void Update<T>(T entity) where T : class;
 		Task<TEntity> GetFirstAsync<TEntity>(Expression<Func<TEntity, bool>> filter = null)	where TEntity : class;
