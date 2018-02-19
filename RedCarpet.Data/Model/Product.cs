@@ -19,6 +19,7 @@ namespace RedCarpet.Data.Model
 
 		public decimal MaxAmazonSellPrice { get; set; }
 		public decimal CurrentPrice { get; set; }
+		public DateTime? DateUpdated { get; set; }
 
 	}
 }

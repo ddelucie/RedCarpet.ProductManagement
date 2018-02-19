@@ -11,6 +11,7 @@ using Amazon.SQS.Model;
 using NLog;
 using RedCarpet.Data;
 using RedCarpet.Data.Model;
+using RedCarpet.MWS.Common;
 
 namespace RedCarpet.SQS.Consumer
 {
@@ -22,20 +23,21 @@ namespace RedCarpet.SQS.Consumer
 		IDataRepository dataRepository;
 		AmazonSQSConfig sqsConfig;
 		AmazonSQSClient sqsClient;
-
+		SellerInfo sellerInfo;
 		public SQSConsumer()
 		{ Initialize(); }
 
-		public SQSConsumer(string queueUrl, string serviceUrl, ILogger nLogger, IDataRepository dataRepository)
+		public SQSConsumer(SellerInfo sellerInfo, ILogger nLogger, IDataRepository dataRepository)
 		{
 			nLogger.Log(LogLevel.Info, "SQSConsumer Initializing");
 			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
 			nLogger.Log(LogLevel.Info, string.Format("queueUrl: {0}", queueUrl));
 
-			this.queueUrl = queueUrl;
-			this.serviceUrl = serviceUrl;
+			this.queueUrl = sellerInfo.QueueUrl;
+			this.serviceUrl = sellerInfo.ServiceUrl;
 			this.nLogger = nLogger;
 			this.dataRepository = dataRepository;
+			this.sellerInfo = sellerInfo;
 			Initialize();
 		}
 
@@ -55,10 +57,13 @@ namespace RedCarpet.SQS.Consumer
 			var receiveMessageRequest = new ReceiveMessageRequest();
 
 			receiveMessageRequest.QueueUrl = queueUrl;
-			receiveMessageRequest.MaxNumberOfMessages = 5;
+			receiveMessageRequest.MaxNumberOfMessages = sellerInfo.BatchSize;
 			var receiveMessageResponse = sqsClient.ReceiveMessage(receiveMessageRequest);
+			nLogger.Log(LogLevel.Info, string.Format("Messages received, count: {0}", receiveMessageResponse.Messages.Count));
+
 
 			if (receiveMessageResponse.Messages.Count == 0) isQueueEmpty = true;
+			IList<PricingContext> pricingContexts = new List<PricingContext>();
 
 			foreach (var message in receiveMessageResponse.Messages)
 			{
@@ -66,7 +71,6 @@ namespace RedCarpet.SQS.Consumer
 				nLogger.Log(LogLevel.Info, string.Format("Message received: {0}", message.MessageId));
 
 				Notification notification = null;
-
 
 				try
 				{
@@ -80,13 +84,20 @@ namespace RedCarpet.SQS.Consumer
 					throw;
 				}
 
-				ProcessMessage(notification);
+				PricingContext pricingContext = ProcessMessage(notification);
+				if (pricingContext != null) pricingContexts.Add(pricingContext);
 
 				nLogger.Log(LogLevel.Info, string.Format("Processed notification"));
 
 				DeleteMessge(message);
 
 			}
+
+			CommitResults(pricingContexts);
+			var updatedProducts = UpdateAmazon(pricingContexts);
+			CommitProducts(updatedProducts);
+			
+
 			return isQueueEmpty;
 		}
 
@@ -111,34 +122,63 @@ namespace RedCarpet.SQS.Consumer
 			var deleteMessageRequest = new DeleteMessageRequest() { QueueUrl = queueUrl, ReceiptHandle = message.ReceiptHandle };
 			objDeleteMessageResponse = sqsClient.DeleteMessage(deleteMessageRequest);
 			nLogger.Log(LogLevel.Info, string.Format("Message deleted: {0}", message.MessageId));
-
 		}
 
-		public void ProcessMessage(Notification notification)
+		public PricingContext ProcessMessage(Notification notification)
 		{
 			string asin = notification.NotificationPayload.AnyOfferChangedNotification.OfferChangeTrigger.ASIN;
 
 			Product product = dataRepository.GetFirstAsync<Product>(x => x.ASIN == asin).Result;
+			if (product == null) return null;
+
+			nLogger.Log(LogLevel.Info, string.Format("Product found for ASIN: {0}", product.ASIN));
 
 			PricingResult pricingResult = ProductLogic.SetPrice(notification, product);
 
-			nLogger.Log(LogLevel.Info, string.Format("ASIN: {0}", pricingResult.ASIN));
+			nLogger.Log(LogLevel.Info, string.Format("SetPrice logic executed"));
+
+			pricingResult.DateEntry = DateTime.UtcNow;
 
 			if (pricingResult.IsPriceChanged)
 			{
-				nLogger.Log(LogLevel.Info, string.Format("Price changed: {0}", pricingResult.NewPrice));
+				nLogger.Log(LogLevel.Info, string.Format("New price selected: {0}", pricingResult.NewPrice));
 
-				// TODO: update price on Amazon
-				//dataRepository.GetFirstAsync<>( )
-
-				// update the product table
 				product.CurrentPrice = pricingResult.NewPrice;
-				dataRepository.Update(product);
+				product.DateUpdated = DateTime.UtcNow;
 			}
 
-			//add history
-			pricingResult.DateEntry = DateTime.UtcNow;
-			dataRepository.Create(pricingResult);
+			return new PricingContext { Product = product, PricingResult = pricingResult };
+		}
+
+		private void CommitResults(IList<PricingContext> pricingContexts)
+		{          
+			nLogger.Log(LogLevel.Info, string.Format("Updating PricingResults in DB"));
+			var pricingResults = pricingContexts.Select(pc => pc.PricingResult).ToList();
+			dataRepository.CreateList(pricingResults);
+		}
+
+		private void CommitProducts(IList<Product> products)
+		{
+			nLogger.Log(LogLevel.Info, string.Format("Committing new prices to product table"));
+			dataRepository.UpdateList(products);
+		}
+
+		private IList<Product> UpdateAmazon(IList<PricingContext> pricingContexts)
+		{
+			var products = pricingContexts.Where(pc => pc.PricingResult.IsPriceChanged).Select(pc => pc.Product).ToList();
+
+			foreach (var product in products)
+			{
+				nLogger.Log(LogLevel.Info, string.Format("Adding to amazon feed. {0}", product.ASIN));
+			}
+
+
+			// TODO: update price on Amazon
+			if (sellerInfo.UpdatePrices)
+			{
+				nLogger.Log(LogLevel.Info, string.Format("Updating Amazon"));
+			}
+			return products;
 		}
 	}
 }

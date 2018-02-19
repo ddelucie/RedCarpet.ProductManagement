@@ -48,6 +48,19 @@ namespace RedCarpet.Data
 			}
 		}
 
+		public void CreateList<TEntity>(IList<TEntity> entities) where TEntity : class
+		{
+			using (var context = new RedCarpetDBContext())
+			{
+				foreach (var entity in entities)
+				{
+					context.SaveChanges();
+					context.Set<TEntity>().Add(entity);
+				}
+				context.SaveChanges();
+			}
+		}
+
 		public void Update<TEntity>(TEntity entity) where TEntity : class
 		{
 			using (var context = new RedCarpetDBContext())
@@ -57,5 +70,21 @@ namespace RedCarpet.Data
 				context.SaveChanges();
 			}
 		}
+
+
+		public void UpdateList<TEntity>(IList<TEntity> entities) where TEntity : class
+		{
+			using (var context = new RedCarpetDBContext())
+			{
+				foreach (var entity in entities)
+				{
+					context.Set<TEntity>().Attach(entity);
+					context.Entry(entity).State = EntityState.Modified;
+				}
+
+				context.SaveChanges();
+			}
+		}
+
 	}
 }

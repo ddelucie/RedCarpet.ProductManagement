@@ -46,6 +46,8 @@
     <Compile Include="Attributes\ResponseType.cs" />
     <Compile Include="Attributes\StreamType.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Feed\PriceFeed.cs" />
+    <Compile Include="Feed\PriceFeedBuilder.cs" />
     <Compile Include="MarketplaceWebService.cs" />
     <Compile Include="MarketplaceWebServiceClient.cs" />
     <Compile Include="MarketplaceWebServiceConfig.cs" />

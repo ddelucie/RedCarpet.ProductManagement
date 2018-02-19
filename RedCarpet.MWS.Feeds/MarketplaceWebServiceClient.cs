@@ -597,12 +597,12 @@ namespace MarketplaceWebService
                             httpResponse.GetResponseHeader("x-mws-response-context"),
                             httpResponse.GetResponseHeader("x-mws-timestamp"));
 
-                        if (isStreamingResponse && statusCode == HttpStatusCode.OK)
-                        {
-                            response = HandleStreamingResponse<T>(httpResponse, clazz);
-                        }
-                        else
-                        {
+						if (isStreamingResponse && statusCode == HttpStatusCode.OK)
+						{
+							response = HandleStreamingResponse<T>(httpResponse, clazz);
+						}
+						else
+						{
                             
                             StreamReader reader = new StreamReader(httpResponse.GetResponseStream(), Encoding.UTF8);
                             responseBody = reader.ReadToEnd();

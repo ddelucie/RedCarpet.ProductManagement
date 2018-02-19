@@ -77,6 +77,10 @@
     <Compile Include="Migrations\201802140651339_Product.Designer.cs">
       <DependentUpon>201802140651339_Product.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802190313304_ProductAddUpdateDate.cs" />
+    <Compile Include="Migrations\201802190313304_ProductAddUpdateDate.Designer.cs">
+      <DependentUpon>201802190313304_ProductAddUpdateDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\PricingResult.cs" />
     <Compile Include="Model\Product.cs" />
@@ -108,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802140651339_Product.resx">
       <DependentUpon>201802140651339_Product.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802190313304_ProductAddUpdateDate.resx">
+      <DependentUpon>201802190313304_ProductAddUpdateDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

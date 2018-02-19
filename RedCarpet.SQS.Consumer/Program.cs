@@ -4,6 +4,7 @@ using System.ServiceProcess;
 using System.Threading;
 using NLog;
 using RedCarpet.Data;
+using RedCarpet.MWS.Common;
 
 namespace RedCarpet.SQS.Consumer
 {
@@ -51,16 +52,24 @@ namespace RedCarpet.SQS.Consumer
 
 			Thread thread;
 			SQSConsumer consumer;
+			SellerInfo sellerInfo;
 
 			public SQSService()
 			{
 				ServiceName = Program.ServiceName;
 
 				var appSettings = ConfigurationManager.AppSettings;
-				string queueUrl = appSettings["queueUrl"];
-				string serviceUrl = appSettings["sqsServiceUrl"];
 
-				consumer = new SQSConsumer(queueUrl, serviceUrl, nLogger, dataRepository);
+				sellerInfo = new SellerInfo();
+				sellerInfo.QueueUrl = appSettings["queueUrl"];
+				sellerInfo.ServiceUrl = appSettings["sqsServiceUrl"];
+				sellerInfo.MwsAuthToken = appSettings["mwsAuthToken"];
+				sellerInfo.UpdatePrices = bool.Parse(appSettings["updatePrices"]);
+				sellerInfo.BatchSize = int.Parse(appSettings["batchSize"]);
+				sellerInfo.BatchWaitTimeSec = int.Parse(appSettings["batchWaitTimeSec"]);
+
+				
+				consumer = new SQSConsumer(sellerInfo, nLogger, dataRepository);
 			}
 
 			protected override void OnStart(string[] args)
@@ -88,13 +97,20 @@ namespace RedCarpet.SQS.Consumer
 					}
 					catch (Exception e)
 					{
-						  nLogger.Log(LogLevel.Error, "*ERROR* " + e.Message);
+						nLogger.Log(LogLevel.Error, "*ERROR* " + e.Message);
 					}
 					if (isQueueEmpty)
 					{
-						nLogger.Log(LogLevel.Info, "Queue is empty");
+						nLogger.Log(LogLevel.Info, "Queue is empty, sleeping.");
 
-						Thread.Sleep(10000);
+						Thread.Sleep(5000);
+					}
+					else
+					{
+						/// wait before next batch
+						nLogger.Log(LogLevel.Info, "Wait before next batch");
+
+						Thread.Sleep(sellerInfo.BatchWaitTimeSec);
 					}
 				}
 			}

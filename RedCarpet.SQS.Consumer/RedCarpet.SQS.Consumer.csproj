@@ -75,6 +75,7 @@
     <Compile Include="AnyOfferChangedNotification.cs">
       <DependentUpon>AnyOfferChangedNotification.xsd</DependentUpon>
     </Compile>
+    <Compile Include="PriceContext.cs" />
     <Compile Include="ProductLogic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +86,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="App.config" />
+    <None Include="App.prod.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +97,10 @@
     <ProjectReference Include="..\RedCarpet.Data\RedCarpet.Data.csproj">
       <Project>{30e1377d-f4b8-4561-9562-e08a139323af}</Project>
       <Name>RedCarpet.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RedCarpet.MWS.Common\RedCarpet.MWS.Common.csproj">
+      <Project>{3b1f9f22-5586-4f53-bb51-e7f46a1e0964}</Project>
+      <Name>RedCarpet.MWS.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\RedCarpet.MWS.Products\RedCarpet.MWS.Products.csproj">
       <Project>{004d0d3f-9156-4f9a-94fa-2cb06d0066c6}</Project>

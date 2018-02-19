@@ -8,8 +8,8 @@
 		private string mwsAuthToken = "example";
 		private string marketplaceId = "ATVPDKIKX0DER";
 		private string serviceUrl = "http://sns.us-west-2.amazonaws.com";
+		private string queueUrl;
 
-		
 
 		public string SellerId
 		{
@@ -70,5 +70,23 @@
 				this.mwsAuthToken = value;
 			}
 		}
+
+		public string QueueUrl
+		{
+			get
+			{
+				return queueUrl;
+			}
+
+			set
+			{
+				queueUrl = value;
+			}
+		}
+
+		public bool UpdatePrices { get; set; }
+		public int BatchSize { get; set; }
+		public int BatchWaitTimeSec { get; set; }
+
 	}
 }
