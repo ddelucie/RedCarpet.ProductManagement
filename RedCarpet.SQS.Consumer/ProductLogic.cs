@@ -55,14 +55,6 @@ namespace RedCarpet.SQS.Consumer
 			return price;
 		}
 
-		//private static decimal FindBuyBoxPrice(Notification notification, dynamic product)
-		//{
-		//	decimal buyBoxPrice = 0m;
-		//	if (notification == null) return buyBoxPrice;
-		//	if (!decimal.TryParse(notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices.BuyBoxPrice.LandedPrice.Amount, out buyBoxPrice))
-		//	{ buyBoxPrice = 0m; }
-		//	return buyBoxPrice;
-		//}
 
 		public static PricingResult BuildPricingResult(Notification notification)
 		{
@@ -76,23 +68,61 @@ namespace RedCarpet.SQS.Consumer
 			if (DateTime.TryParse(notification.NotificationPayload.AnyOfferChangedNotification.OfferChangeTrigger.TimeOfOfferChange, out timeOfOfferChange))
 				pricingResult.TimeOfOfferChange = timeOfOfferChange;
 
-			// buy box prices
-			if (notification.NotificationPayload.AnyOfferChangedNotification.Summary == null) return pricingResult;
-			if (notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices == null) return pricingResult;
 
-			decimal landedPrice = 0m;
-			if (!decimal.TryParse(notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices.BuyBoxPrice.LandedPrice.Amount, out landedPrice))
-			{ landedPrice = 0m; }
-			pricingResult.LandedPrice = landedPrice;
+			pricingResult.LandedPrice = GetLandedPrice(notification);
+			pricingResult.ListingPrice = GetListingPrice(notification);
 
-			decimal listingPrice = 0m;
-			if (!decimal.TryParse(notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices.BuyBoxPrice.ListingPrice.Amount, out listingPrice))
-			{ listingPrice = 0m; }
-			pricingResult.ListingPrice = listingPrice;
+			if (pricingResult.LandedPrice == 0.0m)
+				pricingResult.LandedPrice = GetLowestOfferPrice(notification);
+
 
 			return pricingResult;
 		}
 
 
+		public static decimal GetLowestOfferPrice(Notification notification)
+		{
+			if (notification.NotificationPayload.AnyOfferChangedNotification.Offers == null) return 0.0m;
+			if (notification.NotificationPayload.AnyOfferChangedNotification.Offers.Offer == null) return 0.0m;
+
+			var offerPrices = notification.NotificationPayload.AnyOfferChangedNotification.Offers.Offer
+				.Select(o => new { OfferPrice = o.ListingPrice.Amount, Shipping = o.Shipping.Amount });
+			IList<decimal> prices = new List<decimal>();
+
+			foreach (var offerPrice in offerPrices)
+			{
+				decimal offer; decimal ship;
+				if (!decimal.TryParse(offerPrice.OfferPrice, out offer)) offer = 0.0m;
+				if (!decimal.TryParse(offerPrice.Shipping, out ship)) ship = 0.0m;
+
+				prices.Add(offer + ship);
+			}
+
+			return prices.Min(p => p);
+		}
+
+
+		public static decimal GetLandedPrice(Notification notification)
+		{           
+
+			if (notification.NotificationPayload.AnyOfferChangedNotification.Summary == null) return 0.0m;
+			if (notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices == null) return 0.0m;
+
+			decimal price = 0m;
+			if (!decimal.TryParse(notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices.BuyBoxPrice.LandedPrice.Amount, out price))
+			{ price = 0m; }
+			return price;
+		}
+		public static decimal GetListingPrice(Notification notification)
+		{
+
+			if (notification.NotificationPayload.AnyOfferChangedNotification.Summary == null) return 0.0m;
+			if (notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices == null) return 0.0m;
+
+			decimal price = 0m;
+			if (!decimal.TryParse(notification.NotificationPayload.AnyOfferChangedNotification.Summary.BuyBoxPrices.BuyBoxPrice.ListingPrice.Amount, out price))
+			{ price = 0m; }
+			return price;
+		}
 	}
 }

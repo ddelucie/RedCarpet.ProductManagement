@@ -17,6 +17,7 @@ namespace RedCarpet.Data.Model
 		public const string Min = "Min";
 		public const string Max = "Max";
 		public const string BuyBox = "BuyBox";
+
 	}
 
 	public class PricingResult
