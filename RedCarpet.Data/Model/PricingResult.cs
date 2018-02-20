@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,12 +32,14 @@ namespace RedCarpet.Data.Model
 		public string PriceCategorySelected { get; set; }
 		public DateTime TimeOfOfferChange { get; set; }
 		public string ASIN { get; set; }
+
 		public bool IsPriceChanged
 		{
 			get
 			{
 				return NewPrice - OriginalPrice >= 0.01m;
 			}
+			set { }
 		}
 		public DateTime DateEntry { get; set; }
 
