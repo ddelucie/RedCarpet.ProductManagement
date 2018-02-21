@@ -19,6 +19,7 @@ using System;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using MarketplaceWebService.Model;
+using RedCarpet.MWS.Feeds.Model;
 
 namespace MarketplaceWebService
 {
@@ -197,17 +198,19 @@ namespace MarketplaceWebService
         /// </remarks>
         GetFeedSubmissionResultResponse GetFeedSubmissionResult(GetFeedSubmissionResultRequest request);
 
-                
-        /// <summary>
-        /// Get Feed Submission List 
-        /// </summary>
-        /// <param name="request">Get Feed Submission List  request</param>
-        /// <returns>Get Feed Submission List  Response from the service</returns>
-        /// <remarks>
-        /// returns a list of feed submission identifiers and their associated metadata
-        ///   
-        /// </remarks>
-        GetFeedSubmissionListResponse GetFeedSubmissionList(GetFeedSubmissionListRequest request);
+		AmazonEnvelope GetFeedSubmissionResultAmazonEnvelope(GetFeedSubmissionResultRequest request);
+
+
+		/// <summary>
+		/// Get Feed Submission List 
+		/// </summary>
+		/// <param name="request">Get Feed Submission List  request</param>
+		/// <returns>Get Feed Submission List  Response from the service</returns>
+		/// <remarks>
+		/// returns a list of feed submission identifiers and their associated metadata
+		///   
+		/// </remarks>
+		GetFeedSubmissionListResponse GetFeedSubmissionList(GetFeedSubmissionListRequest request);
 
                 
         /// <summary>

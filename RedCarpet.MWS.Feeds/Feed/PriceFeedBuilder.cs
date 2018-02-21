@@ -3,29 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RedCarpet.MWS.Feeds.Model;
 
 namespace RedCarpet.MWS.Feeds.Feed
 {
 	public static class PriceFeedBuilder
 	{
-		public static PriceFeed Build()
+		public static AmazonEnvelope Build()
 		{
 
-			var priceFeed = new PriceFeed();
-			priceFeed.MessageType = "Price";
-			priceFeed.Header = new Header();
-			priceFeed.Messages = new List<Message>();
-			return priceFeed;
+			var amazonEnvelope = new AmazonEnvelope();
+			amazonEnvelope.Header = new Header();
+			amazonEnvelope.Header.DocumentVersion = "1.01";
+			amazonEnvelope.Message = new Message();
+			amazonEnvelope.Message.Price = new Price();
+			amazonEnvelope.Message.Price.StandardPrice = new OverrideCurrencyAmount() { currency = BaseCurrencyCodeWithDefault.USD };
+			amazonEnvelope.MessageType = "Price";
+
+			return amazonEnvelope;
 		}
 
-		public static Message BuildMessage()
-		{
-			Message message = new Message();
-			message.Price = new Price();
-			message.Price.StandardPrice = new StandardPrice();
-			message.Price.StandardPrice.Currency = "USD";
 
-			return message;
-		}
 	}
+
+
 }

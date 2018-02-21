@@ -20,6 +20,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
 using MarketplaceWebService.Model;
+using RedCarpet.MWS.Feeds.Model;
 
 namespace MarketplaceWebService.Mock
 {
@@ -355,5 +356,10 @@ namespace MarketplaceWebService.Mock
             type.InvokeMember("ResponseHeaderMetadata", BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty, Type.DefaultBinder, obj, parameters);
         
         }
-    }
+
+		public AmazonEnvelope GetFeedSubmissionResultAmazonEnvelope(GetFeedSubmissionResultRequest request)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

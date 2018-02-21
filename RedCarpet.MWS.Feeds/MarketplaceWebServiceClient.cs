@@ -31,7 +31,7 @@ using MarketplaceWebService;
 using MarketplaceWebService.Attributes;
 using System.Reflection;
 using System.Collections.Specialized;
-
+using RedCarpet.MWS.Feeds.Model;
 
 namespace MarketplaceWebService
 {
@@ -344,17 +344,23 @@ namespace MarketplaceWebService
             return Invoke<GetFeedSubmissionResultResponse, GetFeedSubmissionResultRequest>(ConvertGetFeedSubmissionResult(request), request);
         }
 
-        
-        /// <summary>
-        /// Get Feed Submission List 
-        /// </summary>
-        /// <param name="request">Get Feed Submission List  request</param>
-        /// <returns>Get Feed Submission List  Response from the service</returns>
-        /// <remarks>
-        /// returns a list of feed submission identifiers and their associated metadata
-        /// 
-        /// </remarks>
-        public GetFeedSubmissionListResponse GetFeedSubmissionList(GetFeedSubmissionListRequest request)
+
+		public AmazonEnvelope GetFeedSubmissionResultAmazonEnvelope(GetFeedSubmissionResultRequest request)
+		{
+			return Invoke<AmazonEnvelope, GetFeedSubmissionResultRequest>(ConvertGetFeedSubmissionResult(request), request);
+		}
+
+
+		/// <summary>
+		/// Get Feed Submission List 
+		/// </summary>
+		/// <param name="request">Get Feed Submission List  request</param>
+		/// <returns>Get Feed Submission List  Response from the service</returns>
+		/// <remarks>
+		/// returns a list of feed submission identifiers and their associated metadata
+		/// 
+		/// </remarks>
+		public GetFeedSubmissionListResponse GetFeedSubmissionList(GetFeedSubmissionListRequest request)
         {
             return Invoke<GetFeedSubmissionListResponse>(ConvertGetFeedSubmissionList(request));
         }
@@ -596,6 +602,17 @@ namespace MarketplaceWebService
                             httpResponse.GetResponseHeader("x-mws-request-id"),
                             httpResponse.GetResponseHeader("x-mws-response-context"),
                             httpResponse.GetResponseHeader("x-mws-timestamp"));
+
+
+						// HACK to get around bug with GetFeedSubmissionResultResult 
+						if (typeof(T) == typeof(AmazonEnvelope))
+						{
+							StreamReader reader = new StreamReader(httpResponse.GetResponseStream(), Encoding.UTF8);
+							responseBody = reader.ReadToEnd();
+							XmlSerializer serlizer = new XmlSerializer(typeof(T));
+							response = (T)serlizer.Deserialize(new StringReader(responseBody));
+							return response;
+						}
 
 						if (isStreamingResponse && statusCode == HttpStatusCode.OK)
 						{
