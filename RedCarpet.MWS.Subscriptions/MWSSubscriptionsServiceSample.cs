@@ -78,8 +78,8 @@ namespace MWSSubscriptionsService {
 				// succesfully called
                 //response = sample.InvokeRegisterDestination();
 				//RegisterDestinationResponse registerDestinationResponse = (RegisterDestinationResponse)response;
-				//response = sample.InvokeCreateSubscription();
-				//CreateSubscriptionResponse createSubscriptionResponse = (CreateSubscriptionResponse)response;
+				response = sample.InvokeCreateSubscription();
+				CreateSubscriptionResponse createSubscriptionResponse = (CreateSubscriptionResponse)response;
 
 
 				// response = sample.InvokeGetSubscription();
@@ -140,7 +140,7 @@ namespace MWSSubscriptionsService {
 			Destination destination = new Destination();
 			destination.DeliveryChannel = "SQS";
 			AttributeKeyValueList attributes = new AttributeKeyValueList();
-			AttributeKeyValue att = new AttributeKeyValue() { Key = "sqsQueueUrl", Value = "https://sqs.us-west-2.amazonaws.com/889329361753/AnyOfferChangedQueue" };
+			AttributeKeyValue att = new AttributeKeyValue() { Key = "sqsQueueUrl", Value = "https://sqs.us-west-2.amazonaws.com/889329361753/AnyOfferChangedQueueDev" };
 			attributes.Member.Add(att);
 			destination.AttributeList = attributes;
 

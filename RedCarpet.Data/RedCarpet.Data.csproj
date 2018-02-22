@@ -85,6 +85,10 @@
     <Compile Include="Migrations\201802200303558_SaveIsPriceChanged.Designer.cs">
       <DependentUpon>201802200303558_SaveIsPriceChanged.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802220628226_ProdSku.cs" />
+    <Compile Include="Migrations\201802220628226_ProdSku.Designer.cs">
+      <DependentUpon>201802220628226_ProdSku.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\PricingResult.cs" />
     <Compile Include="Model\Product.cs" />
@@ -122,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802200303558_SaveIsPriceChanged.resx">
       <DependentUpon>201802200303558_SaveIsPriceChanged.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802220628226_ProdSku.resx">
+      <DependentUpon>201802220628226_ProdSku.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

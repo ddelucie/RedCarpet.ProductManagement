@@ -15,15 +15,22 @@ namespace RedCarpet.MWS.Feeds.Feed
 			var amazonEnvelope = new AmazonEnvelope();
 			amazonEnvelope.Header = new Header();
 			amazonEnvelope.Header.DocumentVersion = "1.01";
-			amazonEnvelope.Message = new Message();
-			amazonEnvelope.Message.Price = new Price();
-			amazonEnvelope.Message.Price.StandardPrice = new OverrideCurrencyAmount() { currency = BaseCurrencyCodeWithDefault.USD };
+			amazonEnvelope.Messages = new List<Message>();
+			amazonEnvelope.Message = BuildMessage();
 			amazonEnvelope.MessageType = "Price";
 
 			return amazonEnvelope;
 		}
 
 
+		public static Message BuildMessage()
+		{
+			Message message = new Message();
+			message.Price = new Price();
+			message.Price.StandardPrice = new OverrideCurrencyAmount() { currency = BaseCurrencyCodeWithDefault.USD };
+
+			return message;
+		}
 	}
 
 

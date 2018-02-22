@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Amazon.SQS;
 using Amazon.SQS.Model;
+using MarketplaceWebService.Model;
 using NLog;
 using RedCarpet.Data;
 using RedCarpet.Data.Model;
 using RedCarpet.MWS.Common;
+using RedCarpet.MWS.Feeds.Model;
 
 namespace RedCarpet.SQS.Consumer
 {
@@ -24,6 +26,8 @@ namespace RedCarpet.SQS.Consumer
 		AmazonSQSConfig sqsConfig;
 		AmazonSQSClient sqsClient;
 		SellerInfo sellerInfo;
+		FeedHandler feedHandler;
+
 		public SQSConsumer()
 		{ Initialize(); }
 
@@ -49,6 +53,8 @@ namespace RedCarpet.SQS.Consumer
 			sqsConfig.ServiceURL = serviceUrl;
 
 			sqsClient = new AmazonSQSClient(sqsConfig);
+
+			feedHandler = new FeedHandler(sellerInfo, nLogger);
 		}
 
 		public bool Process()
@@ -101,7 +107,7 @@ namespace RedCarpet.SQS.Consumer
 			return isQueueEmpty;
 		}
 
-		private Notification DeserializeNotification(Message message)
+		private Notification DeserializeNotification(Amazon.SQS.Model.Message message)
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(Notification));
 
@@ -116,7 +122,7 @@ namespace RedCarpet.SQS.Consumer
 			return notification;
 		}
 
-		private void DeleteMessge(Message message)
+		private void DeleteMessge(Amazon.SQS.Model.Message message)
 		{
 			DeleteMessageResponse objDeleteMessageResponse = new DeleteMessageResponse();
 			var deleteMessageRequest = new DeleteMessageRequest() { QueueUrl = queueUrl, ReceiptHandle = message.ReceiptHandle };
@@ -167,17 +173,20 @@ namespace RedCarpet.SQS.Consumer
 		{
 			var products = pricingContexts.Where(pc => pc.PricingResult.IsPriceChanged).Select(pc => pc.Product).ToList();
 
-			foreach (var product in products)
-			{
-				nLogger.Log(LogLevel.Info, string.Format("Adding to amazon feed. {0}", product.ASIN));
-			}
 
-
-			// TODO: update price on Amazon
+			// update price on Amazon
 			if (sellerInfo.UpdatePrices)
 			{
-				nLogger.Log(LogLevel.Info, string.Format("Updating Amazon"));
+				nLogger.Log(LogLevel.Info, string.Format("Updating prices on Amazon"));
+				SubmitFeedResponse submitFeedResponse =  feedHandler.SubmitFeed(products);
+
+				nLogger.Log(LogLevel.Info, string.Format("PollFeedStatus"));
+				AmazonEnvelope result = feedHandler.PollFeedStatus(submitFeedResponse.SubmitFeedResult.FeedSubmissionInfo.FeedSubmissionId);
+
+				nLogger.Log(LogLevel.Info, string.Format("Retrieved feed result"));
+
 			}
+
 			return products;
 		}
 	}

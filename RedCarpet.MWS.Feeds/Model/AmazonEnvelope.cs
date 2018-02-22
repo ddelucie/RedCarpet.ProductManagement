@@ -73,6 +73,10 @@ namespace RedCarpet.MWS.Feeds.Model
 		public string MessageType { get; set; }
 		[XmlElement(ElementName = "Message")]
 		public Message Message { get; set; }
+
+		public IList<Message> Messages { get; set; }
+
+
 		[XmlAttribute(AttributeName = "xsi", Namespace = "http://www.w3.org/2000/xmlns/")]
 		public string Xsi { get; set; }
 		[XmlAttribute(AttributeName = "noNamespaceSchemaLocation", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]

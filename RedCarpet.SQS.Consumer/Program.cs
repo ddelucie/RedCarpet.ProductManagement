@@ -56,20 +56,28 @@ namespace RedCarpet.SQS.Consumer
 
 			public SQSService()
 			{
-				ServiceName = Program.ServiceName;
+				try
+				{
+					ServiceName = Program.ServiceName;
 
-				var appSettings = ConfigurationManager.AppSettings;
+					var appSettings = ConfigurationManager.AppSettings;
 
-				sellerInfo = new SellerInfo();
-				sellerInfo.QueueUrl = appSettings["queueUrl"];
-				sellerInfo.ServiceUrl = appSettings["sqsServiceUrl"];
-				sellerInfo.MwsAuthToken = appSettings["mwsAuthToken"];
-				sellerInfo.UpdatePrices = bool.Parse(appSettings["updatePrices"]);
-				sellerInfo.BatchSize = int.Parse(appSettings["batchSize"]);
-				sellerInfo.BatchWaitTimeSec = int.Parse(appSettings["batchWaitTimeSec"]);
+					sellerInfo = new SellerInfo();
+					sellerInfo.QueueUrl = appSettings["queueUrl"];
+					sellerInfo.ServiceUrl = appSettings["sqsServiceUrl"];
+					sellerInfo.MwsAuthToken = appSettings["mwsAuthToken"];
+					sellerInfo.UpdatePrices = bool.Parse(appSettings["updatePrices"]);
+					sellerInfo.BatchSize = int.Parse(appSettings["batchSize"]);
+					sellerInfo.BatchWaitTimeSec = int.Parse(appSettings["batchWaitTimeSec"]);
 
-				
-				consumer = new SQSConsumer(sellerInfo, nLogger, dataRepository);
+					consumer = new SQSConsumer(sellerInfo, nLogger, dataRepository);
+				}
+				catch (Exception)
+				{
+
+					throw;
+				}
+
 			}
 
 			protected override void OnStart(string[] args)

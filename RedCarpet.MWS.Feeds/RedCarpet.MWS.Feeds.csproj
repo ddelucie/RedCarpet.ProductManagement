@@ -45,7 +45,6 @@
     <Compile Include="Attributes\RequestType.cs" />
     <Compile Include="Attributes\ResponseType.cs" />
     <Compile Include="Attributes\StreamType.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Feed\PriceFeed.cs">
       <DependentUpon>PriceFeed.xsd</DependentUpon>
     </Compile>
