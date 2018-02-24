@@ -94,7 +94,7 @@ namespace RedCarpet.SQS.Consumer
 					sleepTime = 2 * sleepTime;
 					Thread.Sleep(sleepTime);
 				}
-				else continue;
+				else break;
 			}
 
 			return response;
@@ -108,7 +108,8 @@ namespace RedCarpet.SQS.Consumer
 
 			foreach (var product in products)
 			{
-				nLogger.Log(LogLevel.Info, string.Format("Adding to amazon feed. ASIN: {0}, SKU: {1}", product.ASIN, product.ItemNumber));
+				nLogger.Log(LogLevel.Info,
+					string.Format("Adding to amazon feed. ASIN: {0}, SKU: {1}, Price: {2}", product.ASIN, product.ItemNumber, product.CurrentPrice));
 
 				RedCarpet.MWS.Feeds.Model.Message message = PriceFeedBuilder.BuildMessage();
 				message.Price.StandardPrice.Value = product.CurrentPrice;
