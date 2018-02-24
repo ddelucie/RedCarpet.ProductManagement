@@ -239,11 +239,22 @@ namespace RedCarpet.SQS.Consumer
 				nLogger.Log(LogLevel.Info, string.Format("Retrieved feed result"));
 
 				if (result.Message.First().ProcessingReport.StatusCode == "Complete" &&
-					result.Message.First().ProcessingReport.ProcessingSummary.MessagesSuccessful == "1")
+					Int16.Parse(result.Message.First().ProcessingReport.ProcessingSummary.MessagesSuccessful) >= 1)
 				{
 					nLogger.Log(LogLevel.Info, string.Format("Feed was a success"));
 					success = true;
 				}
+				if (result.Message.First().ProcessingReport.StatusCode == "Complete" &&
+					Int16.Parse(result.Message.First().ProcessingReport.ProcessingSummary.MessagesWithError) >= 1)
+				{
+					nLogger.Log(LogLevel.Info, string.Format("Errors in feed"));
+					if (result.Message.First().ProcessingReport.Result != null)
+					{
+						nLogger.Log(LogLevel.Info, result.Message.First().ProcessingReport.Result.ResultDescription);
+					}
+					success = false;
+				}
+
 			}
 			else
 			{
