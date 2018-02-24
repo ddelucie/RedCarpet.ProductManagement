@@ -72,7 +72,8 @@ namespace RedCarpet.SQS.Consumer
 
 					sellerInfo = new SellerInfo();
 					sellerInfo.QueueUrl = appSettings["queueUrl"];
-					sellerInfo.ServiceUrl = appSettings["sqsServiceUrl"];
+					sellerInfo.SqsServiceUrl = appSettings["sqsServiceUrl"];
+					sellerInfo.MwsServiceUrl = appSettings["mwsServiceUrl"];
 					sellerInfo.MwsAuthToken = appSettings["mwsAuthToken"];
 					sellerInfo.UpdatePrices = bool.Parse(appSettings["updatePrices"]);
 					sellerInfo.BatchSize = int.Parse(appSettings["batchSize"]);

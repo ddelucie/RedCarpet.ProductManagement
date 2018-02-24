@@ -930,12 +930,12 @@ namespace MarketplaceWebService
                 }
                 else
                 {
-                    ex = new MarketplaceWebServiceException("Internal Error", status, rhm);
+                    ex = new MarketplaceWebServiceException(responseBody, status, rhm);
                 }
             }
             else
             {
-                ex = new MarketplaceWebServiceException("Internal Error", status, rhm);
+                ex = new MarketplaceWebServiceException(responseBody, status, rhm);
             }
             return ex;
         }

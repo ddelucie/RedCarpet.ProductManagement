@@ -36,7 +36,7 @@ namespace RedCarpet.SQS.Consumer
 			nLogger.Log(LogLevel.Info, "SQSConsumer constructor");
 
 			this.queueUrl = sellerInfo.QueueUrl;
-			this.serviceUrl = sellerInfo.ServiceUrl;
+			this.serviceUrl = sellerInfo.SqsServiceUrl;
 			this.nLogger = nLogger;
 			this.dataRepository = dataRepository;
 			this.sellerInfo = sellerInfo;

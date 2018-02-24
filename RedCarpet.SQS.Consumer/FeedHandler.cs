@@ -34,12 +34,12 @@ namespace RedCarpet.SQS.Consumer
 			ImmutableCredentials creds = awsCredentials.GetCredentials();
 
 			config = new MarketplaceWebServiceConfig();
-			config.ServiceURL = sellerInfo.ServiceUrl;
+			config.ServiceURL = sellerInfo.MwsServiceUrl;
 
 			 service = new MarketplaceWebServiceClient(
 					creds.AccessKey,
 					creds.SecretKey,
-					"x",
+					"RC",
 					sellerInfo.AppVersion,
 					config);
 		}

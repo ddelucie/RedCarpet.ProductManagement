@@ -7,7 +7,7 @@
 		private string sellerId = "ARA1ZW7ZHL5MQ";
 		private string mwsAuthToken = "example";
 		private string marketplaceId = "ATVPDKIKX0DER";
-		private string serviceUrl = "http://sns.us-west-2.amazonaws.com";
+		private string serviceUrl;
 		private string queueUrl;
 
 
@@ -35,7 +35,7 @@
 			}
 		}
 
-		public string ServiceUrl
+		public string SqsServiceUrl
 		{
 			get
 			{
@@ -89,5 +89,8 @@
 		public int BatchWaitTimeSec { get; set; }
 		public int FeedSize { get; set; }
 		public int BetweenFeedWaitTimeSec { get; set; }
+
+		public string MwsServiceUrl { get; set; }
+
 	}
 }
