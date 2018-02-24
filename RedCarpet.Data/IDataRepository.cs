@@ -10,6 +10,8 @@ namespace RedCarpet.Data
 	public interface IDataRepository
 	{
 		Task<T> Find<T>(int id) where T : class;
+		IList<TEntity> GetAll<TEntity>() where TEntity : class;
+ 
 		void Create<T>(T entity) where T : class;
 		void CreateList<TEntity>(IList<TEntity> entities) where TEntity : class;
 		void Update<T>(T entity) where T : class;

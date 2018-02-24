@@ -9,6 +9,7 @@ using System.Threading;
 using NLog;
 using RedCarpet.Data;
 using System.IO;
+using RedCarpet.Data.Model;
 
 namespace RedCarpet.MaxMin.FileConsumer
 {
@@ -56,7 +57,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 			IDataRepository dataRepository = new DataRepository();
 			string maxMinFilePath;
 			Thread thread;
-	 
+
 
 			public MaxMinFileConsumer()
 			{
@@ -72,7 +73,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 
 					nLogger.Log(LogLevel.Info, "AppSettings Initialized");
 
-					
+
 				}
 				catch (Exception ex)
 				{
@@ -102,8 +103,53 @@ namespace RedCarpet.MaxMin.FileConsumer
 
 			private void OnChanged(object sender, FileSystemEventArgs e)
 			{
-				nLogger.Log(LogLevel.Info, "OnChanged event raised, file: {0}" + e.FullPath);
+				try
+				{
 
+					nLogger.Log(LogLevel.Info, "OnChanged event raised, file: {0}" + e.FullPath);
+
+
+					var csvData = File.ReadAllLines(e.FullPath);
+
+					nLogger.Log(LogLevel.Info, "ReadAllLines, count: {0}" + csvData.Count());
+
+
+					var maxMinList = new List<Product>();
+
+					maxMinList = csvData
+									  .Skip(1)
+									  .Select(line => FromCsv(line))
+									  .ToList();
+
+					nLogger.Log(LogLevel.Info, "Parsed, count: {0}" + maxMinList.Count());
+
+
+					IList<Product> existingProducts = dataRepository.GetAll<Product>();
+					IList<Product> savingProducts = new List<Product>();
+					foreach (var existingProduct in existingProducts)
+					{
+						Product newValues = maxMinList.Where(p => p.ItemNumber == existingProduct.ItemNumber).FirstOrDefault();
+						if (newValues != null)
+						{
+							existingProduct.MaxAmazonSellPrice = newValues.MaxAmazonSellPrice;
+							existingProduct.MinAmazonSellPrice = newValues.MinAmazonSellPrice;
+							existingProduct.DateUpdated = DateTime.UtcNow;
+							savingProducts.Add(existingProduct);
+						}
+					}
+
+					nLogger.Log(LogLevel.Info, "dataRepository.UpdateList, count: {0}" + savingProducts.Count());
+
+					//B006FUXAGU
+					dataRepository.UpdateList(savingProducts);
+
+					nLogger.Log(LogLevel.Info, "Products saved");
+
+				}
+				catch (Exception ex)
+				{
+					nLogger.Log(LogLevel.Error, ex.Message);
+				}
 			}
 
 			protected override void OnStop()
@@ -116,7 +162,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 			{
 				while (true)
 				{
-					
+
 				}
 			}
 
@@ -129,6 +175,20 @@ namespace RedCarpet.MaxMin.FileConsumer
 				this.OnStop();
 			}
 		}
+
+
+		public static Product FromCsv(string csvLine)
+		{
+			string[] values = csvLine.Split(',');
+			Product product = new Product();
+			product.ItemNumber = values[0];
+			product.ASIN = values[1];
+			product.MinAmazonSellPrice = Convert.ToDecimal(values[2].Replace("$", "").Replace("\"",""));
+			product.MaxAmazonSellPrice = Convert.ToDecimal(values[3].Replace("$", "").Replace("\"", ""));
+
+			return product;
+		}
+
 
 	}
 }

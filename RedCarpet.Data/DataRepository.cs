@@ -21,6 +21,13 @@ namespace RedCarpet.Data
 			}
 		}
 
+		public IList<TEntity> GetAll<TEntity>() where TEntity : class
+		{
+			using (var context = new RedCarpetDBContext())
+			{
+				return context.Set<TEntity>().ToList();
+			}
+		}
 
 		public virtual async Task<TEntity> GetFirstAsync<TEntity>(
 			Expression<Func<TEntity, bool>> filter = null)
