@@ -105,7 +105,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 				{
 
 					nLogger.Log(LogLevel.Info, "OnChanged event raised, file: " + e.FullPath);
-
+					Thread.Sleep(5000);
 
 					var csvData = File.ReadAllLines(e.FullPath);
 

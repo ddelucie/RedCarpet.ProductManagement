@@ -19,8 +19,6 @@ namespace RedCarpet.SQS.Consumer
 {
 	public class SQSConsumer
 	{
-		string queueUrl;
-		string serviceUrl = "http://sqs.us-west-2.amazonaws.com";
 		ILogger nLogger;
 		IDataRepository dataRepository;
 		AmazonSQSConfig sqsConfig;
@@ -35,15 +33,18 @@ namespace RedCarpet.SQS.Consumer
 		{
 			nLogger.Log(LogLevel.Info, "SQSConsumer constructor");
 
-			this.queueUrl = sellerInfo.QueueUrl;
-			this.serviceUrl = sellerInfo.SqsServiceUrl;
 			this.nLogger = nLogger;
 			this.dataRepository = dataRepository;
 			this.sellerInfo = sellerInfo;
 
-			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
-			nLogger.Log(LogLevel.Info, string.Format("queueUrl: {0}", queueUrl));
+			nLogger.Log(LogLevel.Info, string.Format("SqsServiceUrl: {0}", sellerInfo.SqsServiceUrl));
+			nLogger.Log(LogLevel.Info, string.Format("QueueUrl: {0}", sellerInfo.QueueUrl));
+			nLogger.Log(LogLevel.Info, string.Format("MwsServiceUrl: {0}", sellerInfo.MwsServiceUrl));
+			nLogger.Log(LogLevel.Info, string.Format("UpdatePrices: {0}", sellerInfo.UpdatePrices));
+			nLogger.Log(LogLevel.Info, string.Format("SellerId: {0}", sellerInfo.SellerId));
 			nLogger.Log(LogLevel.Info, string.Format("FeedSize: {0}", sellerInfo.FeedSize));
+			nLogger.Log(LogLevel.Info, string.Format("BatchWaitTimeSec: {0}", sellerInfo.BatchWaitTimeSec));
+			nLogger.Log(LogLevel.Info, string.Format("BatchSize: {0}", sellerInfo.BatchSize));
 			nLogger.Log(LogLevel.Info, string.Format("BetweenFeedWaitTimeSec: {0}", sellerInfo.BetweenFeedWaitTimeSec));
 
 
@@ -57,7 +58,7 @@ namespace RedCarpet.SQS.Consumer
 		{
 			sqsConfig = new AmazonSQSConfig();
 
-			sqsConfig.ServiceURL = serviceUrl;
+			sqsConfig.ServiceURL = sellerInfo.SqsServiceUrl;
 
 			sqsClient = new AmazonSQSClient(sqsConfig);
 
@@ -98,6 +99,9 @@ namespace RedCarpet.SQS.Consumer
 									  .Select(g => g.First())
 									  .ToList();
 
+					nLogger.Log(LogLevel.Info, string.Format("-------------------------------------------------------------"));
+					nLogger.Log(LogLevel.Info, string.Format("productsToUpdate count: {0}", productsToUpdate.Count));
+					nLogger.Log(LogLevel.Info, string.Format("-------------------------------------------------------------"));
 					var success = UpdateAmazon(productsToUpdate);
 					if (success) CommitProducts(productsToUpdate);
 					return isQueueEmpty;
@@ -113,7 +117,7 @@ namespace RedCarpet.SQS.Consumer
 			isQueueEmpty = false;
 			var receiveMessageRequest = new ReceiveMessageRequest();
 			
-			receiveMessageRequest.QueueUrl = queueUrl;
+			receiveMessageRequest.QueueUrl = sellerInfo.QueueUrl;
 			receiveMessageRequest.MaxNumberOfMessages = sellerInfo.BatchSize;
 			var receiveMessageResponse = sqsClient.ReceiveMessage(receiveMessageRequest);
 			nLogger.Log(LogLevel.Info, string.Format("Messages received, count: {0}", receiveMessageResponse.Messages.Count));
@@ -174,7 +178,7 @@ namespace RedCarpet.SQS.Consumer
 		private void DeleteMessge(Amazon.SQS.Model.Message message)
 		{
 			DeleteMessageResponse objDeleteMessageResponse = new DeleteMessageResponse();
-			var deleteMessageRequest = new DeleteMessageRequest() { QueueUrl = queueUrl, ReceiptHandle = message.ReceiptHandle };
+			var deleteMessageRequest = new DeleteMessageRequest() { QueueUrl = sellerInfo.QueueUrl, ReceiptHandle = message.ReceiptHandle };
 			objDeleteMessageResponse = sqsClient.DeleteMessage(deleteMessageRequest);
 			nLogger.Log(LogLevel.Info, string.Format("Message deleted: {0}", message.MessageId));
 		}
@@ -252,13 +256,12 @@ namespace RedCarpet.SQS.Consumer
 					{
 						nLogger.Log(LogLevel.Info, result.Message.First().ProcessingReport.Result.ResultDescription);
 					}
-					success = false;
 				}
 
 			}
 			else
 			{
-				nLogger.Log(LogLevel.Info, string.Format("Update pricse on Amazon Disabled"));
+				nLogger.Log(LogLevel.Info, string.Format("Update prices on Amazon Disabled"));
 			}
 
 			return success;
