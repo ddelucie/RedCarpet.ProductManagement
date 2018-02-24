@@ -19,7 +19,7 @@ namespace RedCarpet.SQS.Consumer
 {
 	public class SQSConsumer
 	{
-		string queueUrl = "https://sqs.us-west-2.amazonaws.com/324811268269/ConsoleTest";
+		string queueUrl;
 		string serviceUrl = "http://sqs.us-west-2.amazonaws.com";
 		ILogger nLogger;
 		IDataRepository dataRepository;
@@ -33,16 +33,20 @@ namespace RedCarpet.SQS.Consumer
 
 		public SQSConsumer(SellerInfo sellerInfo, ILogger nLogger, IDataRepository dataRepository)
 		{
-			nLogger.Log(LogLevel.Info, "SQSConsumer Initializing");
-			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
-			nLogger.Log(LogLevel.Info, string.Format("queueUrl: {0}", queueUrl));
+			nLogger.Log(LogLevel.Info, "SQSConsumer constructor");
 
 			this.queueUrl = sellerInfo.QueueUrl;
 			this.serviceUrl = sellerInfo.ServiceUrl;
 			this.nLogger = nLogger;
 			this.dataRepository = dataRepository;
 			this.sellerInfo = sellerInfo;
+
+			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
+			nLogger.Log(LogLevel.Info, string.Format("queueUrl: {0}", queueUrl));
+
+			nLogger.Log(LogLevel.Info, "SQSConsumer Initializing");
 			Initialize();
+
 		}
 
 
@@ -59,9 +63,27 @@ namespace RedCarpet.SQS.Consumer
 
 		public bool Process()
 		{
+			List<Product> productsToUpdate = new List<Product>();
+
+			for (int i = 0; i < 10; i++)
+			{
+				productsToUpdate.AddRange(ProcessMessages());
+
+				if (productsToUpdate.Count > 100  )
+				{
+					var success = UpdateAmazon(productsToUpdate);
+					if (success) CommitProducts(productsToUpdate);
+					return true;
+				}
+			}
+			return true;
+		}
+
+		public IList<Product> ProcessMessages()
+		{
 			bool isQueueEmpty = false;
 			var receiveMessageRequest = new ReceiveMessageRequest();
-
+			
 			receiveMessageRequest.QueueUrl = queueUrl;
 			receiveMessageRequest.MaxNumberOfMessages = sellerInfo.BatchSize;
 			var receiveMessageResponse = sqsClient.ReceiveMessage(receiveMessageRequest);
@@ -99,12 +121,11 @@ namespace RedCarpet.SQS.Consumer
 
 			}
 
-			CommitResults(pricingContexts);
-			var updatedProducts = UpdateAmazon(pricingContexts);
-			CommitProducts(updatedProducts);
-			
+			CommitPricingContexts(pricingContexts);
+			var productsToUpdate = GetProductsToUpdate(pricingContexts);
 
-			return isQueueEmpty;
+
+			return productsToUpdate;
 		}
 
 		private Notification DeserializeNotification(Amazon.SQS.Model.Message message)
@@ -156,8 +177,8 @@ namespace RedCarpet.SQS.Consumer
 			return new PricingContext { Product = product, PricingResult = pricingResult };
 		}
 
-		private void CommitResults(IList<PricingContext> pricingContexts)
-		{          
+		private void CommitPricingContexts(IList<PricingContext> pricingContexts)
+		{
 			nLogger.Log(LogLevel.Info, string.Format("Updating PricingResults in DB"));
 			var pricingResults = pricingContexts.Select(pc => pc.PricingResult).ToList();
 			dataRepository.CreateList(pricingResults);
@@ -169,25 +190,39 @@ namespace RedCarpet.SQS.Consumer
 			dataRepository.UpdateList(products);
 		}
 
-		private IList<Product> UpdateAmazon(IList<PricingContext> pricingContexts)
+		private IList<Product>  GetProductsToUpdate(IList<PricingContext> pricingContexts)
 		{
 			var products = pricingContexts.Where(pc => pc.PricingResult.IsPriceChanged).Select(pc => pc.Product).ToList();
+			return products;
+		}
 
-
+		private bool UpdateAmazon(IList<Product> products)
+		{
+			bool success = false;
 			// update price on Amazon
 			if (sellerInfo.UpdatePrices)
 			{
 				nLogger.Log(LogLevel.Info, string.Format("Updating prices on Amazon"));
-				SubmitFeedResponse submitFeedResponse =  feedHandler.SubmitFeed(products);
+				SubmitFeedResponse submitFeedResponse = feedHandler.SubmitFeed(products);
 
 				nLogger.Log(LogLevel.Info, string.Format("PollFeedStatus"));
 				AmazonEnvelope result = feedHandler.PollFeedStatus(submitFeedResponse.SubmitFeedResult.FeedSubmissionInfo.FeedSubmissionId);
 
 				nLogger.Log(LogLevel.Info, string.Format("Retrieved feed result"));
 
+				if (result.Message.ProcessingReport.StatusCode == "Complete" &&
+					result.Message.ProcessingReport.ProcessingSummary.MessagesSuccessful == "1")
+				{
+					nLogger.Log(LogLevel.Info, string.Format("Feed was a success"));
+					success = true;
+				}
+			}
+			else
+			{
+				nLogger.Log(LogLevel.Info, string.Format("Update pricse on Amazon Disabled"));
 			}
 
-			return products;
+			return success;
 		}
 	}
 }

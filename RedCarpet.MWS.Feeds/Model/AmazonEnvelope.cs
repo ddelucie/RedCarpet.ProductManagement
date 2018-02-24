@@ -74,6 +74,7 @@ namespace RedCarpet.MWS.Feeds.Model
 		[XmlElement(ElementName = "Message")]
 		public Message Message { get; set; }
 
+		[XmlIgnore]
 		public IList<Message> Messages { get; set; }
 
 

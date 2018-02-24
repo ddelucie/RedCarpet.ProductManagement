@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.ServiceProcess;
 using System.Threading;
+using Amazon;
+using Amazon.Runtime.CredentialManagement;
 using NLog;
 using RedCarpet.Data;
 using RedCarpet.MWS.Common;
@@ -13,6 +15,7 @@ namespace RedCarpet.SQS.Consumer
 
 		static void Main(string[] args)
 		{
+ 
 
 			if (Environment.UserInteractive)
 			{
@@ -60,7 +63,12 @@ namespace RedCarpet.SQS.Consumer
 				{
 					ServiceName = Program.ServiceName;
 
+
+					nLogger.Log(LogLevel.Info, "AppSettings Initializing");
+
 					var appSettings = ConfigurationManager.AppSettings;
+
+					nLogger.Log(LogLevel.Info, "AppSettings Initialized");
 
 					sellerInfo = new SellerInfo();
 					sellerInfo.QueueUrl = appSettings["queueUrl"];
@@ -70,12 +78,14 @@ namespace RedCarpet.SQS.Consumer
 					sellerInfo.BatchSize = int.Parse(appSettings["batchSize"]);
 					sellerInfo.BatchWaitTimeSec = int.Parse(appSettings["batchWaitTimeSec"]);
 
+
+
 					consumer = new SQSConsumer(sellerInfo, nLogger, dataRepository);
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
-
-					throw;
+					nLogger.Log(LogLevel.Error, ex);
+					Stop();
 				}
 
 			}

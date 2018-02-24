@@ -35,7 +35,7 @@ namespace MWSSubscriptionsService {
         {
 			var chain = new CredentialProfileStoreChain();
 			AWSCredentials awsCredentials;
-			chain.TryGetAWSCredentials("RedCarpet", out awsCredentials);
+			chain.TryGetAWSCredentials("DD MWS", out awsCredentials);
 			var creds = awsCredentials.GetCredentials();
 
 
@@ -252,8 +252,9 @@ namespace MWSSubscriptionsService {
             SendTestNotificationToDestinationInput request = new SendTestNotificationToDestinationInput();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
-            request.MWSAuthToken = mwsAuthToken;
+            string mwsAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c";
+
+			request.MWSAuthToken = mwsAuthToken;
             request.MarketplaceId = marketplaceId;
 
 			Destination destination = new Destination();
