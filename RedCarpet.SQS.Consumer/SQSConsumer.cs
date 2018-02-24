@@ -91,6 +91,12 @@ namespace RedCarpet.SQS.Consumer
 					timeElapsed))
 				{
 					nLogger.Log(LogLevel.Info, string.Format("isQueueEmpty: {0}, feedSizeReached: {1}, timeElapse: {2}", isQueueEmpty, feedSizeReached, timeElapsed));
+					 
+					// remove dupes
+					productsToUpdate = productsToUpdate
+									  .GroupBy(p => p.ItemNumber)
+									  .Select(g => g.First())
+									  .ToList();
 
 					var success = UpdateAmazon(productsToUpdate);
 					if (success) CommitProducts(productsToUpdate);

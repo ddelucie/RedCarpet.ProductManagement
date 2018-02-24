@@ -25,9 +25,10 @@ namespace RedCarpet.MWS.Common.Tests
 		string appVersion = "1.0";
 		string serviceURL = "https://mws.amazonservices.com";
 
-		string sellerId = "A2FYRWBB6FC905";
-		string marketplaceId = "ATVPDKIKX0DER";
-
+		//string sellerId = "A2FYRWBB6FC905"; // me
+		string sellerId = "ARA1ZW7ZHL5MQ"; // RC
+		//string mWSAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c"; // me
+		string mWSAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f"; // RC
 		public FeedsTests()
 		{
 			var chain = new CredentialProfileStoreChain();
@@ -51,7 +52,7 @@ namespace RedCarpet.MWS.Common.Tests
 					config);
 
 			SubmitFeedRequest submitFeedRequest = new SubmitFeedRequest();
-			submitFeedRequest.MWSAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c";
+			submitFeedRequest.MWSAuthToken = mWSAuthToken;
 			submitFeedRequest.Merchant = sellerId;
 			submitFeedRequest.FeedType = "_POST_PRODUCT_PRICING_DATA_";
 			AmazonEnvelope priceFeed = PriceFeedBuilder.Build();
@@ -85,8 +86,8 @@ namespace RedCarpet.MWS.Common.Tests
 					config);
 
 			SubmitFeedRequest submitFeedRequest = new SubmitFeedRequest();
-			submitFeedRequest.MWSAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
-			submitFeedRequest.Merchant = "ARA1ZW7ZHL5MQ";
+			submitFeedRequest.MWSAuthToken = mWSAuthToken;
+			submitFeedRequest.Merchant = sellerId;
 			submitFeedRequest.FeedType = "_POST_PRODUCT_PRICING_DATA_";
 			AmazonEnvelope priceFeed = PriceFeedBuilder.Build();
 			Message msg = PriceFeedBuilder.BuildMessage();
@@ -121,7 +122,7 @@ namespace RedCarpet.MWS.Common.Tests
 
 
 			GetFeedSubmissionListRequest req = new GetFeedSubmissionListRequest();
-			req.MWSAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c";
+			req.MWSAuthToken = mWSAuthToken;
 			req.Merchant = sellerId;
 			var response = service.GetFeedSubmissionList(req);
 
@@ -149,8 +150,8 @@ namespace RedCarpet.MWS.Common.Tests
 
 
 			GetFeedSubmissionResultRequest req = new GetFeedSubmissionResultRequest();
-			req.MWSAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
-			req.Merchant = "ARA1ZW7ZHL5MQ";
+			req.MWSAuthToken = mWSAuthToken;
+			req.Merchant = sellerId;
 			req.FeedSubmissionId = "56647017586";
  
 
@@ -214,7 +215,7 @@ namespace RedCarpet.MWS.Common.Tests
 
 			GetReportRequest request = new GetReportRequest();
 			request.Merchant = sellerId;
-			request.MWSAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c";  // Optional
+			request.MWSAuthToken = mWSAuthToken;  // Optional
 									   //@TODO: set additional request parameters here
 			request.ReportId = "123"; 
 			GetReportResponse response = service.GetReport(request);

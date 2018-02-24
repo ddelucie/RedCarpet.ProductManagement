@@ -90,7 +90,7 @@ namespace RedCarpet.SQS.Consumer
 			{
 				response = CheckFeedStatus(feedSubmissionId);
 				if (response == null) sleepTime = 2 * sleepTime;
-				Thread.Sleep(sleepTime * 1000);
+				Thread.Sleep(sleepTime);
 			}
 
 			return response;
