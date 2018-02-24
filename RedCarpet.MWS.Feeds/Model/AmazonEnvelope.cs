@@ -71,11 +71,10 @@ namespace RedCarpet.MWS.Feeds.Model
 		public Header Header { get; set; }
 		[XmlElement(ElementName = "MessageType")]
 		public string MessageType { get; set; }
+		//[XmlElement(ElementName = "Message")]
+		//public Message Message { get; set; }
 		[XmlElement(ElementName = "Message")]
-		public Message Message { get; set; }
-
-		[XmlIgnore]
-		public IList<Message> Messages { get; set; }
+		public List<Message> Message { get; set; }
 
 
 		[XmlAttribute(AttributeName = "xsi", Namespace = "http://www.w3.org/2000/xmlns/")]
@@ -83,5 +82,7 @@ namespace RedCarpet.MWS.Feeds.Model
 		[XmlAttribute(AttributeName = "noNamespaceSchemaLocation", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]
 		public string NoNamespaceSchemaLocation { get; set; }
 	}
+
+
 
 }

@@ -78,9 +78,9 @@ namespace RedCarpet.SQS.Consumer
 			return response;
 		}
 
-		public AmazonEnvelope PollFeedStatus(string feedSubmissionId)
+		public AmazonEnvelope  PollFeedStatus(string feedSubmissionId)
 		{
-			AmazonEnvelope response = null;
+			AmazonEnvelope  response = null;
 			int sleepTime = 1000;
 			for (int i = 0; i < 10; i++)
 			{
@@ -105,7 +105,7 @@ namespace RedCarpet.SQS.Consumer
 				message.Price.StandardPrice.Value = product.CurrentPrice;
 				message.Price.SKU = product.ItemNumber;
 				message.MessageID = Guid.NewGuid().ToString();
-				feed.Messages.Add(message);
+				feed.Message.Add(message);
 
 			}
 
@@ -119,7 +119,7 @@ namespace RedCarpet.SQS.Consumer
 			submitFeedRequest.Merchant = sellerInfo.SellerId;
 			submitFeedRequest.FeedType = "_POST_PRODUCT_PRICING_DATA_";
 
-			var stream = Util.GenerateStreamFromXml<AmazonEnvelope>(amazonEnvelope);
+			var stream = Util.GenerateStreamFromXml<AmazonEnvelope >(amazonEnvelope);
 			submitFeedRequest.FeedContent = stream;
 			submitFeedRequest.ContentMD5 = Util.CalculateContentMD5(stream);
 

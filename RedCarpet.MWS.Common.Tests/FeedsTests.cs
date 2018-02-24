@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
@@ -54,14 +55,16 @@ namespace RedCarpet.MWS.Common.Tests
 			submitFeedRequest.Merchant = sellerId;
 			submitFeedRequest.FeedType = "_POST_PRODUCT_PRICING_DATA_";
 			AmazonEnvelope priceFeed = PriceFeedBuilder.Build();
-			priceFeed.Message.MessageID = "1";
-			priceFeed.Message.Price.StandardPrice.Value = 66.00m;
-			priceFeed.Message.Price.SKU = "8E-5FMM-A9HN";
+			priceFeed.Message.First().MessageID = "1";
+			priceFeed.Message.First().Price.StandardPrice.Value = 67.00m;
+			priceFeed.Message.First().Price.SKU = "8E-5FMM-A9HN"; //priceFeed.Message.Add(new Message() { MessageID = "123" });
 			priceFeed.Header.MerchantIdentifier = sellerId;
 			var stream = Util.GenerateStreamFromXml<AmazonEnvelope>(priceFeed);
 			submitFeedRequest.FeedContent = stream;
 			submitFeedRequest.ContentMD5 = Util.CalculateContentMD5(stream);
 			SubmitFeedResponse submitFeedResponse = service.SubmitFeed(submitFeedRequest);
+
+			//Util.GenerateFromXml<AmazonEnvelope>(priceFeed);
 
 			Console.WriteLine(submitFeedResponse.SubmitFeedResult.FeedSubmissionInfo.FeedSubmissionId);
 		}
@@ -112,16 +115,23 @@ namespace RedCarpet.MWS.Common.Tests
 			GetFeedSubmissionResultRequest req = new GetFeedSubmissionResultRequest();
 			req.MWSAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c";
 			req.Merchant = sellerId;
-			req.FeedSubmissionId = "50006017583";
+			req.FeedSubmissionId = "50009017586";
+ 
 
 			//50003017583
 			//50002017580
 			var response = service.GetFeedSubmissionResultAmazonEnvelope(req);
 
-			Console.WriteLine(response.Message.ProcessingReport.Result.ResultCode);
-			Console.WriteLine(response.Message.ProcessingReport.Result.ResultMessageCode);
-			Console.WriteLine(response.Message.ProcessingReport.Result.ResultDescription);
+			Console.WriteLine(response.Message.First().ProcessingReport.ProcessingSummary.MessagesSuccessful);
+			Console.WriteLine(response.Message.First().ProcessingReport.ProcessingSummary.MessagesWithError);
 
+
+			if (response.Message.First().ProcessingReport.Result != null)
+			{
+				Console.WriteLine(response.Message.First().ProcessingReport.Result.ResultCode);
+				Console.WriteLine(response.Message.First().ProcessingReport.Result.ResultMessageCode);
+				Console.WriteLine(response.Message.First().ProcessingReport.Result.ResultDescription);
+			}
 		}
 
 

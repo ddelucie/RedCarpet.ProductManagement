@@ -87,6 +87,7 @@
 		public bool UpdatePrices { get; set; }
 		public int BatchSize { get; set; }
 		public int BatchWaitTimeSec { get; set; }
-
+		public int FeedSize { get; set; }
+		public int BetweenFeedWaitTimeSec { get; set; }
 	}
 }

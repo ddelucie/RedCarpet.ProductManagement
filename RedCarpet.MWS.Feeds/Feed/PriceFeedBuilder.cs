@@ -15,8 +15,8 @@ namespace RedCarpet.MWS.Feeds.Feed
 			var amazonEnvelope = new AmazonEnvelope();
 			amazonEnvelope.Header = new Header();
 			amazonEnvelope.Header.DocumentVersion = "1.01";
-			amazonEnvelope.Messages = new List<Message>();
-			amazonEnvelope.Message = BuildMessage();
+			amazonEnvelope.Message = new List<Message>();
+			amazonEnvelope.Message.Add(BuildMessage());
 			amazonEnvelope.MessageType = "Price";
 
 			return amazonEnvelope;

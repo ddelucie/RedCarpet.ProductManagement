@@ -77,6 +77,8 @@ namespace RedCarpet.SQS.Consumer
 					sellerInfo.UpdatePrices = bool.Parse(appSettings["updatePrices"]);
 					sellerInfo.BatchSize = int.Parse(appSettings["batchSize"]);
 					sellerInfo.BatchWaitTimeSec = int.Parse(appSettings["batchWaitTimeSec"]);
+					sellerInfo.FeedSize = int.Parse(appSettings["feedSize"]);
+					sellerInfo.BetweenFeedWaitTimeSec = int.Parse(appSettings["betweenFeedWaitTimeSec"]);
 
 
 

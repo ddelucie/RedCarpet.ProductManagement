@@ -43,6 +43,9 @@ namespace RedCarpet.SQS.Consumer
 
 			nLogger.Log(LogLevel.Info, string.Format("serviceUrl: {0}", serviceUrl));
 			nLogger.Log(LogLevel.Info, string.Format("queueUrl: {0}", queueUrl));
+			nLogger.Log(LogLevel.Info, string.Format("FeedSize: {0}", sellerInfo.FeedSize));
+			nLogger.Log(LogLevel.Info, string.Format("BetweenFeedWaitTimeSec: {0}", sellerInfo.BetweenFeedWaitTimeSec));
+
 
 			nLogger.Log(LogLevel.Info, "SQSConsumer Initializing");
 			Initialize();
@@ -63,25 +66,45 @@ namespace RedCarpet.SQS.Consumer
 
 		public bool Process()
 		{
+			bool isQueueEmpty = false;
+
 			List<Product> productsToUpdate = new List<Product>();
+			int loops = 0;
+			bool timeElapsed = false;
+			bool feedSizeReached = false;
+			DateTime startTime = DateTime.Now;
 
-			for (int i = 0; i < 10; i++)
+			while (true)
 			{
-				productsToUpdate.AddRange(ProcessMessages());
+				loops++;
+				nLogger.Log(LogLevel.Info, string.Format("Loop {0}", loops));
 
-				if (productsToUpdate.Count > 100  )
+				productsToUpdate.AddRange(ProcessMessages(out isQueueEmpty));
+
+				if (startTime.AddSeconds(sellerInfo.BetweenFeedWaitTimeSec) < DateTime.Now) timeElapsed = true;
+				if (productsToUpdate.Count > sellerInfo.FeedSize) feedSizeReached = true;
+
+
+				if ((productsToUpdate.Count > 0) && 
+					(isQueueEmpty ||
+					feedSizeReached ||
+					timeElapsed))
 				{
+					nLogger.Log(LogLevel.Info, string.Format("isQueueEmpty: {0}, feedSizeReached: {1}, timeElapse: {2}", isQueueEmpty, feedSizeReached, timeElapsed));
+
 					var success = UpdateAmazon(productsToUpdate);
 					if (success) CommitProducts(productsToUpdate);
-					return true;
+					return isQueueEmpty;
 				}
+
+				if (isQueueEmpty) return isQueueEmpty;
+
 			}
-			return true;
 		}
 
-		public IList<Product> ProcessMessages()
+		public IList<Product> ProcessMessages(out bool isQueueEmpty)
 		{
-			bool isQueueEmpty = false;
+			isQueueEmpty = false;
 			var receiveMessageRequest = new ReceiveMessageRequest();
 			
 			receiveMessageRequest.QueueUrl = queueUrl;
@@ -139,7 +162,6 @@ namespace RedCarpet.SQS.Consumer
 				notification = (Notification)serializer.Deserialize(reader);
 			}
 
-			nLogger.Log(LogLevel.Info, string.Format("Deserialized notification"));
 			return notification;
 		}
 
@@ -210,8 +232,8 @@ namespace RedCarpet.SQS.Consumer
 
 				nLogger.Log(LogLevel.Info, string.Format("Retrieved feed result"));
 
-				if (result.Message.ProcessingReport.StatusCode == "Complete" &&
-					result.Message.ProcessingReport.ProcessingSummary.MessagesSuccessful == "1")
+				if (result.Message.First().ProcessingReport.StatusCode == "Complete" &&
+					result.Message.First().ProcessingReport.ProcessingSummary.MessagesSuccessful == "1")
 				{
 					nLogger.Log(LogLevel.Info, string.Format("Feed was a success"));
 					success = true;

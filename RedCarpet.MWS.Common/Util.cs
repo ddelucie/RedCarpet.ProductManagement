@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace RedCarpet.MWS.Common
@@ -27,6 +28,15 @@ namespace RedCarpet.MWS.Common
 			var stream = new MemoryStream();
 			serializer.Serialize(stream, item); stream.Position = 0;
 			return stream;
+		}
+
+		public static void GenerateFromXml<T>(T item)
+		{
+			XmlSerializer serializer = new XmlSerializer(typeof(T));
+			using (FileStream fs = new FileStream(@"sertest.xml", FileMode.Create))
+			{
+				serializer.Serialize(fs, item);
+			}
 		}
 
 		public static string CalculateContentMD5(Stream content)
