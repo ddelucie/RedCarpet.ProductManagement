@@ -89,8 +89,12 @@ namespace RedCarpet.SQS.Consumer
 			for (int i = 0; i < 10; i++)
 			{
 				response = CheckFeedStatus(feedSubmissionId);
-				if (response == null) sleepTime = 2 * sleepTime;
-				Thread.Sleep(sleepTime);
+				if (response == null)
+				{
+					sleepTime = 2 * sleepTime;
+					Thread.Sleep(sleepTime);
+				}
+				else continue;
 			}
 
 			return response;
@@ -99,6 +103,7 @@ namespace RedCarpet.SQS.Consumer
 
 		public AmazonEnvelope BuildAmazonEnvelope(IList<RedCarpet.Data.Model.Product> products)
 		{
+			int messageId = 1;
 			var feed = PriceFeedBuilder.Build();
 
 			foreach (var product in products)
@@ -108,9 +113,9 @@ namespace RedCarpet.SQS.Consumer
 				RedCarpet.MWS.Feeds.Model.Message message = PriceFeedBuilder.BuildMessage();
 				message.Price.StandardPrice.Value = product.CurrentPrice;
 				message.Price.SKU = product.ItemNumber;
-				message.MessageID = Guid.NewGuid().ToString();
+				message.MessageID = messageId.ToString();
 				feed.Message.Add(message);
-
+				messageId++;
 			}
 
 			return feed;

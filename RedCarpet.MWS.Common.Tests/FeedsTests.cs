@@ -93,15 +93,24 @@ namespace RedCarpet.MWS.Common.Tests
 			Message msg = PriceFeedBuilder.BuildMessage();
 			msg.MessageID = "1";
 			msg.Price.StandardPrice.Value = 154.40m;
-			msg.Price.SKU = "HEWD9P29A"; //priceFeed.Message.Add(new Message() { MessageID = "123" });
+			msg.Price.SKU = "HEWD9P29A"; 
 			priceFeed.Message.Add(msg);
+
+			Message msg2 = PriceFeedBuilder.BuildMessage();
+			msg2.MessageID = "2";
+			msg2.Price.StandardPrice.Value = 62.05m;
+			msg2.Price.SKU = "HEW35S";
+			priceFeed.Message.Add(msg2);
+
 			priceFeed.Header.MerchantIdentifier = sellerId;
 			var stream = Util.GenerateStreamFromXml<AmazonEnvelope>(priceFeed);
+
+			Util.GenerateFromXml<AmazonEnvelope>(priceFeed);
+
 			submitFeedRequest.FeedContent = stream;
 			submitFeedRequest.ContentMD5 = Util.CalculateContentMD5(stream);
 			SubmitFeedResponse submitFeedResponse = service.SubmitFeed(submitFeedRequest);
 
-			//Util.GenerateFromXml<AmazonEnvelope>(priceFeed);
 
 			Console.WriteLine(submitFeedResponse.SubmitFeedResult.FeedSubmissionInfo.FeedSubmissionId);
 		}
@@ -148,11 +157,10 @@ namespace RedCarpet.MWS.Common.Tests
 					appVersion,
 					config);
 
-
 			GetFeedSubmissionResultRequest req = new GetFeedSubmissionResultRequest();
 			req.MWSAuthToken = mWSAuthToken;
 			req.Merchant = sellerId;
-			req.FeedSubmissionId = "56647017586";
+			req.FeedSubmissionId = "56654017586";
  
 
 			//50003017583

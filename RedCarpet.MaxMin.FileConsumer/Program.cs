@@ -55,8 +55,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 			IDataRepository dataRepository = new DataRepository();
 
 			Thread thread;
-			SQSConsumer consumer;
-			SellerInfo sellerInfo;
+	 
 
 			public SQSService()
 			{
@@ -71,20 +70,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 
 					nLogger.Log(LogLevel.Info, "AppSettings Initialized");
 
-					sellerInfo = new SellerInfo();
-					sellerInfo.QueueUrl = appSettings["queueUrl"];
-					sellerInfo.SqsServiceUrl = appSettings["sqsServiceUrl"];
-					sellerInfo.MwsServiceUrl = appSettings["mwsServiceUrl"];
-					sellerInfo.MwsAuthToken = appSettings["mwsAuthToken"];
-					sellerInfo.UpdatePrices = bool.Parse(appSettings["updatePrices"]);
-					sellerInfo.BatchSize = int.Parse(appSettings["batchSize"]);
-					sellerInfo.BatchWaitTimeSec = int.Parse(appSettings["batchWaitTimeSec"]);
-					sellerInfo.FeedSize = int.Parse(appSettings["feedSize"]);
-					sellerInfo.BetweenFeedWaitTimeSec = int.Parse(appSettings["betweenFeedWaitTimeSec"]);
-
-
-
-					consumer = new SQSConsumer(sellerInfo, nLogger, dataRepository);
+					
 				}
 				catch (Exception ex)
 				{
@@ -112,28 +98,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 			{
 				while (true)
 				{
-					bool isQueueEmpty = false;
-					try
-					{
-						isQueueEmpty = consumer.Process();
-					}
-					catch (Exception e)
-					{
-						nLogger.Log(LogLevel.Error, "*ERROR* " + e.Message);
-					}
-					if (isQueueEmpty)
-					{
-						nLogger.Log(LogLevel.Info, "Queue is empty, sleeping.");
-
-						Thread.Sleep(5000);
-					}
-					else
-					{
-						/// wait before next batch
-						nLogger.Log(LogLevel.Info, "Wait before next batch");
-
-						Thread.Sleep(sellerInfo.BatchWaitTimeSec * 1000);
-					}
+					
 				}
 			}
 
