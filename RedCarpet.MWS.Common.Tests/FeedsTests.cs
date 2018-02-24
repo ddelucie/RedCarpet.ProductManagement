@@ -85,13 +85,13 @@ namespace RedCarpet.MWS.Common.Tests
 					config);
 
 			SubmitFeedRequest submitFeedRequest = new SubmitFeedRequest();
-			submitFeedRequest.MWSAuthToken = "Amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
+			submitFeedRequest.MWSAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
 			submitFeedRequest.Merchant = "ARA1ZW7ZHL5MQ";
 			submitFeedRequest.FeedType = "_POST_PRODUCT_PRICING_DATA_";
 			AmazonEnvelope priceFeed = PriceFeedBuilder.Build();
 			Message msg = PriceFeedBuilder.BuildMessage();
 			msg.MessageID = "1";
-			msg.Price.StandardPrice.Value = 154.31m;
+			msg.Price.StandardPrice.Value = 154.40m;
 			msg.Price.SKU = "HEWD9P29A"; //priceFeed.Message.Add(new Message() { MessageID = "123" });
 			priceFeed.Message.Add(msg);
 			priceFeed.Header.MerchantIdentifier = sellerId;
@@ -149,9 +149,9 @@ namespace RedCarpet.MWS.Common.Tests
 
 
 			GetFeedSubmissionResultRequest req = new GetFeedSubmissionResultRequest();
-			req.MWSAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c";
-			req.Merchant = sellerId;
-			req.FeedSubmissionId = "50009017586";
+			req.MWSAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
+			req.Merchant = "ARA1ZW7ZHL5MQ";
+			req.FeedSubmissionId = "56647017586";
  
 
 			//50003017583

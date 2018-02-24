@@ -69,9 +69,14 @@ namespace RedCarpet.SQS.Consumer
 
 				response = service.GetFeedSubmissionResultAmazonEnvelope(req);
 			}
+			catch (MarketplaceWebServiceException e)
+			{
+				if (e.ErrorCode == "FeedProcessingResultNotReady") nLogger.Info("feed result not available");
+			}
 			catch (Exception e)
 			{
-				nLogger.Info("feed result not available");
+				nLogger.Error("CheckFeedStatus Failed");
+				throw;
 			}
 
 			return response;
