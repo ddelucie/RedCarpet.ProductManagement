@@ -130,7 +130,7 @@ namespace RedCarpet.SQS.Consumer
 						/// wait before next batch
 						nLogger.Log(LogLevel.Info, "Wait before next batch");
 
-						Thread.Sleep(sellerInfo.BatchWaitTimeSec);
+						Thread.Sleep(sellerInfo.BatchWaitTimeSec * 1000);
 					}
 				}
 			}

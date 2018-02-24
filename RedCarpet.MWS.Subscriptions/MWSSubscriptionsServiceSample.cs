@@ -252,7 +252,7 @@ namespace MWSSubscriptionsService {
             SendTestNotificationToDestinationInput request = new SendTestNotificationToDestinationInput();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "amzn.mws.10b0d30f-3c9c-fa00-c792-e9142f66a94c";
+            string mwsAuthToken = "Amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
 
 			request.MWSAuthToken = mwsAuthToken;
             request.MarketplaceId = marketplaceId;

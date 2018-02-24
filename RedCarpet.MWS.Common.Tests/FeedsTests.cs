@@ -69,6 +69,42 @@ namespace RedCarpet.MWS.Common.Tests
 			Console.WriteLine(submitFeedResponse.SubmitFeedResult.FeedSubmissionInfo.FeedSubmissionId);
 		}
 
+
+		[TestMethod]
+		public void SubmitFeedTestRed()
+		{
+			MarketplaceWebServiceConfig config = new MarketplaceWebServiceConfig();
+			config.ServiceURL = serviceURL;
+
+			MarketplaceWebService.MarketplaceWebService service =
+				new MarketplaceWebServiceClient(
+					creds.AccessKey,
+					creds.SecretKey,
+					appName,
+					appVersion,
+					config);
+
+			SubmitFeedRequest submitFeedRequest = new SubmitFeedRequest();
+			submitFeedRequest.MWSAuthToken = "Amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
+			submitFeedRequest.Merchant = "ARA1ZW7ZHL5MQ";
+			submitFeedRequest.FeedType = "_POST_PRODUCT_PRICING_DATA_";
+			AmazonEnvelope priceFeed = PriceFeedBuilder.Build();
+			Message msg = PriceFeedBuilder.BuildMessage();
+			msg.MessageID = "1";
+			msg.Price.StandardPrice.Value = 154.31m;
+			msg.Price.SKU = "HEWD9P29A"; //priceFeed.Message.Add(new Message() { MessageID = "123" });
+			priceFeed.Message.Add(msg);
+			priceFeed.Header.MerchantIdentifier = sellerId;
+			var stream = Util.GenerateStreamFromXml<AmazonEnvelope>(priceFeed);
+			submitFeedRequest.FeedContent = stream;
+			submitFeedRequest.ContentMD5 = Util.CalculateContentMD5(stream);
+			SubmitFeedResponse submitFeedResponse = service.SubmitFeed(submitFeedRequest);
+
+			//Util.GenerateFromXml<AmazonEnvelope>(priceFeed);
+
+			Console.WriteLine(submitFeedResponse.SubmitFeedResult.FeedSubmissionInfo.FeedSubmissionId);
+		}
+
 		[TestMethod]
 		public void GetFeedsTest()
 		{

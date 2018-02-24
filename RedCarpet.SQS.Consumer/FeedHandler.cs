@@ -36,8 +36,7 @@ namespace RedCarpet.SQS.Consumer
 			config = new MarketplaceWebServiceConfig();
 			config.ServiceURL = sellerInfo.ServiceUrl;
 
-			MarketplaceWebService.MarketplaceWebService service =
-				new MarketplaceWebServiceClient(
+			 service = new MarketplaceWebServiceClient(
 					creds.AccessKey,
 					creds.SecretKey,
 					"x",
@@ -86,7 +85,7 @@ namespace RedCarpet.SQS.Consumer
 			{
 				response = CheckFeedStatus(feedSubmissionId);
 				if (response == null) sleepTime = 2 * sleepTime;
-				Thread.Sleep(sleepTime);
+				Thread.Sleep(sleepTime * 1000);
 			}
 
 			return response;

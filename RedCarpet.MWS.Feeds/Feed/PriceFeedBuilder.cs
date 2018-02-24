@@ -16,7 +16,6 @@ namespace RedCarpet.MWS.Feeds.Feed
 			amazonEnvelope.Header = new Header();
 			amazonEnvelope.Header.DocumentVersion = "1.01";
 			amazonEnvelope.Message = new List<Message>();
-			amazonEnvelope.Message.Add(BuildMessage());
 			amazonEnvelope.MessageType = "Price";
 
 			return amazonEnvelope;
@@ -28,7 +27,6 @@ namespace RedCarpet.MWS.Feeds.Feed
 			Message message = new Message();
 			message.Price = new Price();
 			message.Price.StandardPrice = new OverrideCurrencyAmount() { currency = BaseCurrencyCodeWithDefault.USD };
-
 			return message;
 		}
 	}
