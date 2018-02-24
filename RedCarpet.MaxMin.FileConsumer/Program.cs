@@ -56,8 +56,6 @@ namespace RedCarpet.MaxMin.FileConsumer
 			ILogger nLogger = LogManager.GetLogger("MaxMin Consumer Logger");
 			IDataRepository dataRepository = new DataRepository();
 			string maxMinFilePath;
-			Thread thread;
-
 
 			public MaxMinFileConsumer()
 			{
@@ -106,22 +104,24 @@ namespace RedCarpet.MaxMin.FileConsumer
 				try
 				{
 
-					nLogger.Log(LogLevel.Info, "OnChanged event raised, file: {0}" + e.FullPath);
+					nLogger.Log(LogLevel.Info, "OnChanged event raised, file: " + e.FullPath);
 
 
 					var csvData = File.ReadAllLines(e.FullPath);
 
-					nLogger.Log(LogLevel.Info, "ReadAllLines, count: {0}" + csvData.Count());
+					nLogger.Log(LogLevel.Info, "ReadAllLines, count: " + csvData.Count());
 
+					int skipCount = 0;
+					if (csvData[0].Contains("ItemNumber")) skipCount = 1;  
 
 					var maxMinList = new List<Product>();
 
 					maxMinList = csvData
-									  .Skip(1)
+									  .Skip(skipCount)
 									  .Select(line => FromCsv(line))
 									  .ToList();
 
-					nLogger.Log(LogLevel.Info, "Parsed, count: {0}" + maxMinList.Count());
+					nLogger.Log(LogLevel.Info, "Parsed, count:" + maxMinList.Count());
 
 
 					IList<Product> existingProducts = dataRepository.GetAll<Product>();
@@ -138,9 +138,8 @@ namespace RedCarpet.MaxMin.FileConsumer
 						}
 					}
 
-					nLogger.Log(LogLevel.Info, "dataRepository.UpdateList, count: {0}" + savingProducts.Count());
+					nLogger.Log(LogLevel.Info, "dataRepository.UpdateList, count: " + savingProducts.Count());
 
-					//B006FUXAGU
 					dataRepository.UpdateList(savingProducts);
 
 					nLogger.Log(LogLevel.Info, "Products saved");
@@ -156,7 +155,6 @@ namespace RedCarpet.MaxMin.FileConsumer
 			{
 				Console.WriteLine("Stopping " + ServiceName);
 				nLogger.Log(LogLevel.Info, "*** Stopping " + ServiceName);
-				thread.Abort();
 			}
 			public void DoWork()
 			{
