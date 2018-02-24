@@ -8,6 +8,7 @@ using System.ServiceProcess;
 using System.Threading;
 using NLog;
 using RedCarpet.Data;
+using System.IO;
 
 namespace RedCarpet.MaxMin.FileConsumer
 {
@@ -21,7 +22,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 			if (Environment.UserInteractive)
 			{
 				// running as console app
-				SQSService service = new SQSService();
+				MaxMinFileConsumer service = new MaxMinFileConsumer();
 				service.Start(args);
 
 
@@ -33,7 +34,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 			else
 			{
 				// running as service
-				using (var service = new SQSService())
+				using (var service = new MaxMinFileConsumer())
 				{
 					ServiceBase.Run(service);
 				}
@@ -46,18 +47,18 @@ namespace RedCarpet.MaxMin.FileConsumer
 
 
 
-		public const string ServiceName = "SQS Consumer";
+		public const string ServiceName = "MaxMin.FileConsumer";
 
-		public class SQSService : ServiceBase
+		public class MaxMinFileConsumer : ServiceBase
 		{
 
-			ILogger nLogger = LogManager.GetLogger("SQS Consumer Logger");
+			ILogger nLogger = LogManager.GetLogger("MaxMin Consumer Logger");
 			IDataRepository dataRepository = new DataRepository();
-
+			string maxMinFilePath;
 			Thread thread;
 	 
 
-			public SQSService()
+			public MaxMinFileConsumer()
 			{
 				try
 				{
@@ -67,6 +68,7 @@ namespace RedCarpet.MaxMin.FileConsumer
 					nLogger.Log(LogLevel.Info, "AppSettings Initializing");
 
 					var appSettings = ConfigurationManager.AppSettings;
+					maxMinFilePath = appSettings["maxMinFilePath"];
 
 					nLogger.Log(LogLevel.Info, "AppSettings Initialized");
 
@@ -84,8 +86,24 @@ namespace RedCarpet.MaxMin.FileConsumer
 			{
 				Console.WriteLine("Starting " + ServiceName);
 				nLogger.Log(LogLevel.Info, "*** Starting " + ServiceName);
-				thread = new Thread(this.DoWork);
-				thread.Start();
+				try
+				{
+					FileSystemWatcher watcher = new FileSystemWatcher();
+					watcher.Path = maxMinFilePath;
+					watcher.Created += new FileSystemEventHandler(OnChanged);
+					// Begin watching.
+					watcher.EnableRaisingEvents = true;
+				}
+				catch (Exception ex)
+				{
+					throw ex;
+				}
+			}
+
+			private void OnChanged(object sender, FileSystemEventArgs e)
+			{
+				nLogger.Log(LogLevel.Info, "OnChanged event raised, file: {0}" + e.FullPath);
+
 			}
 
 			protected override void OnStop()
