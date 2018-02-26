@@ -85,13 +85,12 @@ namespace RedCarpet.SQS.Consumer
 		public AmazonEnvelope  PollFeedStatus(string feedSubmissionId)
 		{
 			AmazonEnvelope  response = null;
-			int sleepTime = 1000;
+			int sleepTime = 60000;
 			for (int i = 0; i < 10; i++)
 			{
 				response = CheckFeedStatus(feedSubmissionId);
 				if (response == null)
 				{
-					sleepTime = 2 * sleepTime;
 					Thread.Sleep(sleepTime);
 				}
 				else break;

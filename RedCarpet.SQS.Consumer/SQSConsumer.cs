@@ -245,13 +245,13 @@ namespace RedCarpet.SQS.Consumer
 				if (result.Message.First().ProcessingReport.StatusCode == "Complete" &&
 					Int16.Parse(result.Message.First().ProcessingReport.ProcessingSummary.MessagesSuccessful) >= 1)
 				{
-					nLogger.Log(LogLevel.Info, string.Format("Feed was a success"));
+					nLogger.Log(LogLevel.Info, string.Format("Feed was a success, success count {0}", result.Message.First().ProcessingReport.ProcessingSummary.MessagesSuccessful));
 					success = true;
 				}
 				if (result.Message.First().ProcessingReport.StatusCode == "Complete" &&
 					Int16.Parse(result.Message.First().ProcessingReport.ProcessingSummary.MessagesWithError) >= 1)
 				{
-					nLogger.Log(LogLevel.Info, string.Format("Errors in feed"));
+					nLogger.Log(LogLevel.Info, string.Format("Errors in feed, error count: {0}", result.Message.First().ProcessingReport.ProcessingSummary.MessagesWithError));
 					if (result.Message.First().ProcessingReport.Result != null)
 					{
 						nLogger.Log(LogLevel.Info, result.Message.First().ProcessingReport.Result.ResultDescription);

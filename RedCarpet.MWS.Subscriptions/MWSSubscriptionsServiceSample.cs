@@ -59,10 +59,10 @@ namespace MWSSubscriptionsService {
 
             // Create a configuration object
             MWSSubscriptionsServiceConfig config = new MWSSubscriptionsServiceConfig();
-            config.ServiceURL = serviceURL;
-            // Set other client connection configurations here if needed
-            // Create the client itself
-            MWSSubscriptionsService client = new MWSSubscriptionsServiceClient(accessKey, secretKey, appName, appVersion, config);
+            config.ServiceURL = serviceURL; 
+			 // Set other client connection configurations here if needed
+			 // Create the client itself
+			 MWSSubscriptionsService client = new MWSSubscriptionsServiceClient(accessKey, secretKey, appName, appVersion, config);
 
             MWSSubscriptionsServiceSample sample = new MWSSubscriptionsServiceSample(client);
 
@@ -85,8 +85,8 @@ namespace MWSSubscriptionsService {
 				// response = sample.InvokeGetSubscription();
 				//response = sample.InvokeListRegisteredDestinations();
 				//response = sample.InvokeListSubscriptions();
-				// response = sample.InvokeRegisterDestination();
-				response = sample.InvokeSendTestNotificationToDestination();
+				response = sample.InvokeRegisterDestination();
+				//response = sample.InvokeSendTestNotificationToDestination();
 				// response = sample.InvokeUpdateSubscription();
 				// response = sample.InvokeGetServiceStatus();
 				Console.WriteLine("Response:");
@@ -133,7 +133,7 @@ namespace MWSSubscriptionsService {
             CreateSubscriptionInput request = new CreateSubscriptionInput();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            string mwsAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
             request.MWSAuthToken = mwsAuthToken;
             request.MarketplaceId = marketplaceId;
 			
@@ -208,7 +208,7 @@ namespace MWSSubscriptionsService {
             // Create a request.
             ListRegisteredDestinationsInput request = new ListRegisteredDestinationsInput();
             request.SellerId = sellerId;
-            request.MWSAuthToken = "";
+            request.MWSAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
             request.MarketplaceId = marketplaceId;
             return this.client.ListRegisteredDestinations(request);
         }
@@ -232,7 +232,7 @@ namespace MWSSubscriptionsService {
             RegisterDestinationInput request = new RegisterDestinationInput();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            string mwsAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -240,7 +240,7 @@ namespace MWSSubscriptionsService {
 			destination.DeliveryChannel = "SQS";
 			request.Destination = destination;
 			AttributeKeyValueList attributes = new AttributeKeyValueList();
-			AttributeKeyValue att = new AttributeKeyValue() { Key = "sqsQueueUrl", Value = "https://sqs.us-west-2.amazonaws.com/889329361753/AnyOfferChangedQueue" };
+			AttributeKeyValue att = new AttributeKeyValue() { Key = "sqsQueueUrl", Value = "https://sqs.us-west-2.amazonaws.com/889329361753/AnyOfferChangedQueueDev" };
 			attributes.Member.Add(att);
 			destination.AttributeList = attributes;
 			return this.client.RegisterDestination(request);
