@@ -10,6 +10,8 @@ using NLog;
 using RedCarpet.Data;
 using System.IO;
 using RedCarpet.Data.Model;
+using System.Data.OleDb;
+using System.Data;
 
 namespace RedCarpet.MaxMin.FileConsumer
 {
@@ -107,19 +109,32 @@ namespace RedCarpet.MaxMin.FileConsumer
 					nLogger.Log(LogLevel.Info, "OnChanged event raised, file: " + e.FullPath);
 					Thread.Sleep(5000);
 
-					var csvData = File.ReadAllLines(e.FullPath);
+					var fileName = e.FullPath;
+					//var connectionString = string.Format("Provider=Microsoft.Jet.OLEDB.4.0; data source={0}; Extended Properties=Excel 8.0;", fileName);
+					string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + ";Extended Properties=Excel 12.0;";
 
-					nLogger.Log(LogLevel.Info, "ReadAllLines, count: " + csvData.Count());
+					var adapter = new OleDbDataAdapter("SELECT * FROM [MinMax$]", connectionString);
+					var ds = new DataSet();
 
-					int skipCount = 0;
-					if (csvData[0].Contains("ItemNumber")) skipCount = 1;  
+					adapter.Fill(ds, "MAXMIN");
 
-					var maxMinList = new List<Product>();
+					var maxMinList = ds.Tables["MAXMIN"].AsEnumerable();
 
-					maxMinList = csvData
-									  .Skip(skipCount)
-									  .Select(line => FromCsv(line))
-									  .ToList();
+
+
+					//var csvData = File.ReadAllLines(e.FullPath);
+
+					//nLogger.Log(LogLevel.Info, "ReadAllLines, count: " + csvData.Count());
+
+					//int skipCount = 0;
+					//if (csvData[0].Contains("ItemNumber")) skipCount = 1;  
+
+					//var maxMinList = new List<Product>();
+
+					//maxMinList = csvData
+					//				  .Skip(skipCount)
+					//				  .Select(line => FromCsv(line))
+					//				  .ToList();
 
 					nLogger.Log(LogLevel.Info, "Parsed, count:" + maxMinList.Count());
 
@@ -128,11 +143,11 @@ namespace RedCarpet.MaxMin.FileConsumer
 					IList<Product> savingProducts = new List<Product>();
 					foreach (var existingProduct in existingProducts)
 					{
-						Product newValues = maxMinList.Where(p => p.ItemNumber == existingProduct.ItemNumber).FirstOrDefault();
+						var newValues = maxMinList.Where(p => p.ItemArray[0].ToString() == existingProduct.ItemNumber).FirstOrDefault();
 						if (newValues != null)
 						{
-							existingProduct.MaxAmazonSellPrice = newValues.MaxAmazonSellPrice;
-							existingProduct.MinAmazonSellPrice = newValues.MinAmazonSellPrice;
+							existingProduct.MaxAmazonSellPrice = decimal.Parse(newValues[3].ToString());
+							existingProduct.MinAmazonSellPrice = decimal.Parse(newValues[2].ToString());
 							existingProduct.DateUpdated = DateTime.UtcNow;
 							savingProducts.Add(existingProduct);
 						}

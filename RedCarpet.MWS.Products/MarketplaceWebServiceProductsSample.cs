@@ -52,8 +52,7 @@ namespace MarketplaceWebServiceProducts {
 			// The client application version
 			string appVersion = "1.0";
 
-			string sellerId = "ARA1ZW7ZHL5MQ";
-			string marketplaceId = "ATVPDKIKX0DER";
+
 			// The endpoint for region service and version (see developer guide)
 			// ex: https://mws.amazonservices.com
 			string serviceURL = "https://mws.amazonservices.com";
@@ -73,11 +72,11 @@ namespace MarketplaceWebServiceProducts {
             try 
             {
                 IMWSResponse response = null;
-                response = sample.InvokeGetCompetitivePricingForASIN();
+                //response = sample.InvokeGetCompetitivePricingForASIN();
                 // response = sample.InvokeGetCompetitivePricingForSKU();
                 // response = sample.InvokeGetLowestOfferListingsForASIN();
                 // response = sample.InvokeGetLowestOfferListingsForSKU();
-                // response = sample.InvokeGetLowestPricedOffersForASIN();
+                 response = sample.InvokeGetLowestPricedOffersForASIN();
                 // response = sample.InvokeGetLowestPricedOffersForSKU();
                 // response = sample.InvokeGetMatchingProduct();
                 // response = sample.InvokeGetMatchingProductForId();
@@ -117,6 +116,7 @@ namespace MarketplaceWebServiceProducts {
         private readonly IMarketplaceWebServiceProducts client;
 		string sellerId = "ARA1ZW7ZHL5MQ";
 		string marketplaceId = "ATVPDKIKX0DER";
+		string mwsAuthToken = "amzn.mws.c2b0d4ad-e73e-b729-d3a1-b0998fcd6a9f";
 		public MarketplaceWebServiceProductsSample(IMarketplaceWebServiceProducts client)
         {
             this.client = client;
@@ -128,7 +128,6 @@ namespace MarketplaceWebServiceProducts {
             GetCompetitivePricingForASINRequest request = new GetCompetitivePricingForASINRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -146,7 +145,6 @@ namespace MarketplaceWebServiceProducts {
             GetCompetitivePricingForSKURequest request = new GetCompetitivePricingForSKURequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -161,7 +159,7 @@ namespace MarketplaceWebServiceProducts {
             GetLowestOfferListingsForASINRequest request = new GetLowestOfferListingsForASINRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -180,7 +178,7 @@ namespace MarketplaceWebServiceProducts {
             GetLowestOfferListingsForSKURequest request = new GetLowestOfferListingsForSKURequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -199,7 +197,7 @@ namespace MarketplaceWebServiceProducts {
             GetLowestPricedOffersForASINRequest request = new GetLowestPricedOffersForASINRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -216,7 +214,7 @@ namespace MarketplaceWebServiceProducts {
             GetLowestPricedOffersForSKURequest request = new GetLowestPricedOffersForSKURequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -233,7 +231,7 @@ namespace MarketplaceWebServiceProducts {
             GetMatchingProductRequest request = new GetMatchingProductRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -248,7 +246,7 @@ namespace MarketplaceWebServiceProducts {
             GetMatchingProductForIdRequest request = new GetMatchingProductForIdRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -265,7 +263,7 @@ namespace MarketplaceWebServiceProducts {
             GetMyFeesEstimateRequest request = new GetMyFeesEstimateRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             FeesEstimateRequestList feesEstimateRequestList = new FeesEstimateRequestList();
             request.FeesEstimateRequestList = feesEstimateRequestList;
@@ -278,7 +276,7 @@ namespace MarketplaceWebServiceProducts {
             GetMyPriceForASINRequest request = new GetMyPriceForASINRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -293,7 +291,7 @@ namespace MarketplaceWebServiceProducts {
             GetMyPriceForSKURequest request = new GetMyPriceForSKURequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -308,7 +306,7 @@ namespace MarketplaceWebServiceProducts {
             GetProductCategoriesForASINRequest request = new GetProductCategoriesForASINRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -323,7 +321,7 @@ namespace MarketplaceWebServiceProducts {
             GetProductCategoriesForSKURequest request = new GetProductCategoriesForSKURequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
@@ -338,7 +336,7 @@ namespace MarketplaceWebServiceProducts {
             GetServiceStatusRequest request = new GetServiceStatusRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             return this.client.GetServiceStatus(request);
         }
@@ -349,7 +347,7 @@ namespace MarketplaceWebServiceProducts {
             ListMatchingProductsRequest request = new ListMatchingProductsRequest();
             
             request.SellerId = sellerId;
-            string mwsAuthToken = "example";
+            
             request.MWSAuthToken = mwsAuthToken;
             
             request.MarketplaceId = marketplaceId;
