@@ -76,11 +76,11 @@ namespace MarketplaceWebServiceProducts {
                 // response = sample.InvokeGetCompetitivePricingForSKU();
                 // response = sample.InvokeGetLowestOfferListingsForASIN();
                 // response = sample.InvokeGetLowestOfferListingsForSKU();
-                 response = sample.InvokeGetLowestPricedOffersForASIN();
+                // response = sample.InvokeGetLowestPricedOffersForASIN();
                 // response = sample.InvokeGetLowestPricedOffersForSKU();
                 // response = sample.InvokeGetMatchingProduct();
                 // response = sample.InvokeGetMatchingProductForId();
-                // response = sample.InvokeGetMyFeesEstimate();
+                 response = sample.InvokeGetMyFeesEstimate();
                 // response = sample.InvokeGetMyPriceForASIN();
                 // response = sample.InvokeGetMyPriceForSKU();
                 // response = sample.InvokeGetProductCategoriesForASIN();
@@ -134,7 +134,7 @@ namespace MarketplaceWebServiceProducts {
             ASINListType asinList = new ASINListType();
             request.ASINList = asinList;
 			//ASINIdentifier asin = new ASINIdentifier(marketplaceId, "B00005JC8K");
-			asinList.ASIN.Add("B00005JC8K");
+			asinList.ASIN.Add("B01LJUR6TC");
 
 			return this.client.GetCompetitivePricingForASIN(request);
         }
@@ -261,8 +261,11 @@ namespace MarketplaceWebServiceProducts {
         {
             // Create a request.
             GetMyFeesEstimateRequest request = new GetMyFeesEstimateRequest();
-            
-            request.SellerId = sellerId;
+			FeesEstimateRequestList list = new FeesEstimateRequestList();
+			list.FeesEstimateRequest.Add(new FeesEstimateRequest() { )
+			request.FeesEstimateRequestList = 
+
+			request.SellerId = sellerId;
             
             request.MWSAuthToken = mwsAuthToken;
             FeesEstimateRequestList feesEstimateRequestList = new FeesEstimateRequestList();

@@ -91,7 +91,7 @@ namespace RedCarpet.SQS.Consumer
 					feedSizeReached ||
 					timeElapsed))
 				{
-					nLogger.Log(LogLevel.Info, string.Format("isQueueEmpty: {0}, feedSizeReached: {1}, timeElapse: {2}", isQueueEmpty, feedSizeReached, timeElapsed));
+					nLogger.Log(LogLevel.Info, string.Format("isQueueEmpty: {0}, feedSizeReached: {1}, timeElapsed: {2}", isQueueEmpty, feedSizeReached, timeElapsed));
 					 
 					// remove dupes
 					productsToUpdate = productsToUpdate
